@@ -174,7 +174,7 @@ document.getElementById("askBtn").addEventListener("click", async () => {
 
   // Disable button and show loading state
   askBtn.disabled = true;
-  responseDiv.innerHTML = "⏳ Thinking...";
+  responseDiv.innerHTML = "Thinking...";
   responseDiv.classList.remove('error');
   responseDiv.classList.add('loading');
   console.log("Popup: Sending message with prompt:", questionInput);
