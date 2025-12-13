@@ -22,7 +22,7 @@ This is a **personal browser extension application** that provides quick access 
 - **Simple UI** - Clean, minimal popup interface (300px width)
 - **Zero External Dependencies** - Works offline after model installation
 
-## 🚀 Usage
+## 🚀 Preview
 
 ![Extension Preview](assets/ScreenShot.png)
 
