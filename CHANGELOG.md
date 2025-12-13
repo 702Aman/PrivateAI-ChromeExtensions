@@ -44,17 +44,25 @@ All notable changes to this project will be documented in this file.
 - Comprehensive error messages
 
 ### Fixed
-- XSS vulnerability in history display
+- XSS vulnerability in history display (via HTML escaping)
 - Missing error feedback during requests
 - No timeout handling on stuck requests
 - Incomplete input validation
-- Inconsistent delete button text
+- Missing button disabled state feedback
 
 ### Technical Details
-- `popup.js`: 205 lines (from 145) - Added history, validation, async handling
-- `background.js`: 90 lines (from 31) - Added timeout, retry, validation
-- `style.css`: Added loading animation, error states, button styling
+- `popup.js`: 219 lines (from 145) - Added history, validation, async handling, timeout support
+- `background.js`: 95 lines (from 31) - Added timeout, retry logic, input validation, smart error messages
+- `style.css`: 224+ lines - Added loading animation, error states, button styling, disabled states
+- `manifest.json`: Updated to v1.1.0, added description and default_title
 - README.md: Updated with new features and troubleshooting guides
+- CHANGELOG.md: New file documenting all changes
+
+### Code Statistics
+- Total lines: ~541 (popup.js + background.js + styles)
+- New functions: 12 (validation, storage utils, error handling, timeouts)
+- New CSS animations: 1 (pulse animation for loading)
+- New error messages: 8+ (timeout, connection, model not found, validation, etc.)
 
 ## [1.0.0] - 2025-12-13
 
