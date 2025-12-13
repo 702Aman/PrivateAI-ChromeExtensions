@@ -24,7 +24,7 @@ This is a **personal browser extension application** that provides quick access 
 
 ## 🚀 Usage
 
-![Extension Preview](assets/usage.png)
+![Extension Preview](assets/ScreenShot.png)
 
 ## 🛠 Prerequisites
 
