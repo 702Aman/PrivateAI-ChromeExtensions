@@ -1,20 +1,20 @@
-# Ollama ChatGPT Assistant
+# Private AI Assistant
 
-A Chrome browser extension that brings AI assistance directly to your browser using locally-running Ollama models. Get fast, private AI responses without sending data to external services.
+A Chrome browser extension that brings AI assistance directly to your browser using locally-running AI models. Get fast, private responses without sending data to external services.
 
 ## 🎯 Purpose
 
-This is a **personal browser extension application** that provides quick access to local AI models via a simple popup interface. It eliminates the need to switch between your browser and Ollama applications by integrating AI capabilities directly into Chrome.
+This is a **personal browser extension application** that provides quick access to local AI models via a simple popup interface. It integrates AI capabilities directly into Chrome for seamless assistance.
 
 **Type:** Private (for personal/local use)
 
 ## ✨ Features
 
-- **Local AI Processing** - All queries are processed locally using Ollama
+- **Local AI Processing** - All queries are processed locally on your machine
 - **Private & Secure** - No data sent to external services
-- **Fast Responses** - Direct communication with localhost Ollama server
+- **Fast Responses** - Direct communication with localhost AI server
 - **Simple UI** - Clean, minimal popup interface
-- **Zero Setup Cost** - Works offline after Ollama installation
+- **Zero External Dependencies** - Works offline after model installation
 
 ## 🛠 Prerequisites
 
@@ -36,7 +36,7 @@ Before using this extension, ensure you have:
 2. Open Chrome and go to `chrome://extensions/`
 3. Enable **Developer mode** (toggle in top right)
 4. Click **Load unpacked**
-5. Select the `chatgpt-extension` folder
+5. Select this folder (`private-ai-chromeextension`)
 6. The extension icon will appear in your Chrome toolbar
 
 ## 🚀 Usage
@@ -50,14 +50,14 @@ Before using this extension, ensure you have:
 
 3. **Type your question** in the text area
 
-4. **Click "Ask Ollama"** to get a response
+4. **Click "Ask AI"** to get a response
 
 5. **Wait for the response** to appear below
 
 ## 📁 Project Structure
 
 ```
-chatgpt-extension/
+private-ai-chromeextension/
 ├── src/
 │   ├── popup/               # Popup UI files
 │   │   ├── popup.html       # UI structure
@@ -65,7 +65,7 @@ chatgpt-extension/
 │   │   └── style.css        # Styling
 │   │
 │   └── background/          # Background service worker
-│       └── background.js    # Ollama API communication
+│       └── background.js    # AI API communication
 │
 ├── manifest.json            # Chrome extension manifest (MV3)
 ├── README.md               # Documentation (this file)
@@ -146,14 +146,14 @@ This extension uses **Manifest V3** (MV3), the latest Chrome extension standard:
 
 ## ⚠️ Limitations & Notes
 
-- Requires Ollama to be running locally
+- Requires an AI server (Ollama) running locally
 - Limited to localhost communication (not remote servers)
 - Response time depends on model size and system specs
 - Does not support streaming responses (complete responses only)
 
 ## 🔒 Privacy
 
-All communication happens locally between your browser and the Ollama server running on your machine. No data leaves your computer.
+All communication happens locally between your browser and the AI server running on your machine. No data leaves your computer.
 
 ## 📄 License
 
