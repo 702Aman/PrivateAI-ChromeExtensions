@@ -12,8 +12,14 @@ This is a **personal browser extension application** that provides quick access 
 
 - **Local AI Processing** - All queries are processed locally on your machine
 - **Private & Secure** - No data sent to external services
+- **Conversation History** - Auto-saves up to 50 recent Q&A conversations
+- **Persistent Storage** - History saved across browser sessions
+- **Dark Mode Support** - Auto-detects system theme preference
+- **Robust Error Handling** - Clear, actionable error messages
+- **Request Timeout** - 30-second timeout with helpful feedback
+- **Input Validation** - Prevents invalid or oversized requests
 - **Fast Responses** - Direct communication with localhost AI server
-- **Simple UI** - Clean, minimal popup interface
+- **Simple UI** - Clean, minimal popup interface (300px width)
 - **Zero External Dependencies** - Works offline after model installation
 
 ## 🛠 Prerequisites
@@ -53,6 +59,18 @@ Before using this extension, ensure you have:
 4. **Click "Ask AI"** to get a response
 
 5. **Wait for the response** to appear below
+
+### Using Conversation History
+
+- **View History** - Scroll through past conversations at the bottom
+- **Reload Conversation** - Click any history item to reload the question
+- **Delete Item** - Click the ✕ button to remove a specific conversation
+- **Clear All** - Click "Clear All" button to delete entire history (with confirmation)
+- **Auto-Save** - Every successful response is automatically saved
+
+### Dark Mode
+
+The extension automatically detects your system theme preference. If your OS is set to dark mode, the extension will use a dark theme. Light mode is used by default.
 
 ## 📁 Project Structure
 
@@ -98,20 +116,43 @@ const response = await fetch("http://localhost:11434/api/generate", {
 
 ## 🐛 Troubleshooting
 
-### "No response from background.js"
+### "Ollama request timed out. Is Ollama running?"
 - Ensure Ollama is running: `ollama serve`
 - Check that the model exists: `ollama list`
-- Open DevTools (F12) and check the console for errors
-
-### Connection refused error
 - Verify Ollama is accessible at `http://localhost:11434`
+- Allow up to 30 seconds for large model responses
+
+### "Cannot connect to Ollama. Make sure it's running..."
+- Start Ollama: `ollama serve`
+- Verify connection: Visit `http://localhost:11434` in your browser
 - Check firewall settings
 - Ensure no other service is blocking port 11434
+
+### "Model not found. Did you pull it?"
+- List available models: `ollama list`
+- Pull the model: `ollama pull llama3:latest`
+- Verify model name in extension (default: `llama3:latest`)
+
+### "Please enter a valid question (1-5000 characters)"
+- Ensure your input is not empty
+- Maximum question length is 5000 characters
+- Try a shorter, clearer question
+
+### History not saving
+- Ensure Chrome extension has storage permission
+- Check available disk space
+- Clear browser cache: Settings → Privacy → Clear browsing data
 
 ### Slow responses
 - Ollama response time depends on model size and hardware
 - Using smaller models (e.g., `neural-chat`) speeds up responses
 - Larger models provide better quality but take longer
+- Try using GPU acceleration if available
+
+### Error clearing history
+- Try refreshing the extension (chrome://extensions)
+- Close and reopen the popup
+- Check DevTools (F12) for specific error messages
 
 ## 📝 Development
 
@@ -146,10 +187,14 @@ This extension uses **Manifest V3** (MV3), the latest web extension standard sup
 
 ## ⚠️ Limitations & Notes
 
-- Requires an AI server (Ollama) running locally
-- Limited to localhost communication (not remote servers)
-- Response time depends on model size and system specs
-- Does not support streaming responses (complete responses only)
+- **Requires Ollama** - An AI server must be running locally
+- **Localhost Only** - Limited to `http://localhost:11434` (not remote servers)
+- **No Streaming** - Responses are complete, not streamed
+- **30-Second Timeout** - Requests exceeding 30 seconds will timeout
+- **5000 Character Limit** - Input questions limited to 5000 characters
+- **50 History Limit** - Conversation history stores up to 50 items
+- **Response Latency** - Depends on model size and system hardware
+- **Single Model** - Currently configured for one model at a time (set in code)
 
 ## 🔒 Privacy
 
