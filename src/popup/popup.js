@@ -71,7 +71,7 @@ async function loadHistory() {
           <div class="history-item-question" title="${escapeHtml(conv.question)}">Q: ${escapeHtml(questionShort)}</div>
           <div class="history-item-time">${timeAgo}</div>
         </div>
-        <button class="history-item-delete" data-index="${index}" title="Delete this conversation">✕</button>
+        <button class="history-item-delete" data-index="${index}" title="Delete this conversation">clear</button>
       `;
       
       // Click to reload
