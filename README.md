@@ -1,6 +1,6 @@
 # Private AI Assistant
 
-A Chrome browser extension that brings AI assistance directly to your browser using locally-running AI models. Get fast, private responses without sending data to external services.
+A Chromium-based browser extension that brings AI assistance directly to your browser using locally-running AI models. Get fast, private responses without sending data to external services.
 
 ## 🎯 Purpose
 
@@ -20,7 +20,7 @@ This is a **personal browser extension application** that provides quick access 
 
 Before using this extension, ensure you have:
 
-1. **Chrome/Chromium Browser** (v90+)
+1. **Chromium-based Browser** (v90+) - Chrome, Edge, Brave, Opera, or Vivaldi
 2. **Ollama** installed and running locally
    - Download: https://ollama.ai
    - Default endpoint: `http://localhost:11434`
@@ -33,11 +33,11 @@ Before using this extension, ensure you have:
 ## 📦 Installation
 
 1. Clone or download this repository
-2. Open Chrome and go to `chrome://extensions/`
+2. Open your browser and go to `chrome://extensions/` (or equivalent in your browser)
 3. Enable **Developer mode** (toggle in top right)
 4. Click **Load unpacked**
 5. Select this folder (`private-ai-chromeextension`)
-6. The extension icon will appear in your Chrome toolbar
+6. The extension icon will appear in your browser toolbar
 
 ## 🚀 Usage
 
@@ -46,7 +46,7 @@ Before using this extension, ensure you have:
    ollama serve
    ```
 
-2. **Click the extension icon** in your Chrome toolbar
+2. **Click the extension icon** in your browser toolbar
 
 3. **Type your question** in the text area
 
@@ -137,10 +137,10 @@ const response = await fetch("http://localhost:11434/api/generate", {
 
 ## 📋 Manifest Overview
 
-This extension uses **Manifest V3** (MV3), the latest Chrome extension standard:
+This extension uses **Manifest V3** (MV3), the latest web extension standard supported by all Chromium browsers:
 
 - **Permissions**: `storage` - for data persistence
-- **Host Permissions**: `http://localhost:11434/*` - to access local Ollama
+- **Host Permissions**: `http://localhost:11434/*` - to access local AI server
 - **Background Worker**: Service worker for API calls
 - **UI**: Single popup window
 
