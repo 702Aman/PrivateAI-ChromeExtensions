@@ -53,7 +53,7 @@ Before using this extension, ensure you have:
 
 1. **Start Ollama** on your machine
    ```bash
-   ollama serve
+   OLLAMA_ORIGINS="*" ollama serve
    ```
 
 2. **Click the extension icon** in your browser toolbar
