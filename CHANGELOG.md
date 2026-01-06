@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-01-07
+
+### Added
+- **Privacy Policy** - Chrome Store compliance with comprehensive privacy policy
+- **Icon Support** - Added AIQUICK.png icon for extension branding
+- **Chrome Store Ready** - Updated permissions and removed unnecessary "tabs" permission
+
+### Changed
+- Updated extension description to "Privacy-focused AI assistant browser extension"
+- Removed "Personal use only" wording for Chrome Store compliance
+- Manifest permissions optimized (storage only, no tabs permission)
+
 ## [1.1.0] - 2025-12-14
 
 ### Added
