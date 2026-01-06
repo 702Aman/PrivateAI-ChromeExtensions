@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - QuickAI</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #1a73e8;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #1a73e8;
+            margin-top: 30px;
+        }
+        .last-updated {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        ul {
+            margin: 10px 0 10px 20px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Privacy Policy - QuickAI Browser Extension</h1>
+        <p class="last-updated">Last Updated: January 7, 2026</p>
+
+        <h2>1. Overview</h2>
+        <p>QuickAI ("Extension") is a privacy-focused browser extension that provides AI assistance through multiple providers. This Privacy Policy explains how we handle your data and your privacy rights.</p>
+
+        <h2>2. Data Collection & Storage</h2>
+        <p>QuickAI is designed with privacy as a core principle:</p>
+        <ul>
+            <li><strong>No Personal Data Collection:</strong> We do not collect, store, or transmit any personal information about you.</li>
+            <li><strong>No User Tracking:</strong> We do not track your browsing activity, search history, or usage patterns.</li>
+            <li><strong>No Analytics:</strong> We do not use analytics services, cookies, or tracking pixels.</li>
+            <li><strong>Local Storage Only:</strong> All user configurations and conversation history are stored locally on your device using Chrome's storage API.</li>
+        </ul>
+
+        <h2>3. Data Transmission</h2>
+        <p>When you use QuickAI:</p>
+        <ul>
+            <li><strong>Local Ollama:</strong> If you configure local Ollama, requests are sent directly to your local machine at <code>http://localhost:11434</code>. No data leaves your device.</li>
+            <li><strong>Google Gemini:</strong> If you configure Google Gemini, your API key and queries are sent directly to Google's servers. Please review Google's privacy policy at https://policies.google.com/privacy.</li>
+            <li><strong>OpenAI ChatGPT:</strong> If you configure OpenAI, your API key and queries are sent directly to OpenAI's servers. Please review OpenAI's privacy policy at https://openai.com/policies/privacy-policy/.</li>
+            <li><strong>Your Responsibility:</strong> You are responsible for managing your own API keys and understanding the privacy practices of third-party AI providers you choose to use.</li>
+        </ul>
+
+        <h2>4. Local Storage Details</h2>
+        <p>The Extension stores the following data locally on your device:</p>
+        <ul>
+            <li>Your AI provider preferences (Ollama, Gemini, or OpenAI)</li>
+            <li>Your conversation history (up to 50 recent Q&A conversations)</li>
+            <li>Timestamps of conversations</li>
+            <li><strong>API Keys are NOT stored by default.</strong> Users must enter API keys each session, or optionally save them locally using their browser's storage.</li>
+        </ul>
+        <p>This data is stored using the Chrome Storage API and is never transmitted to external servers.</p>
+
+        <h2>5. Third-Party Services</h2>
+        <p>QuickAI may interact with the following third-party services based on your configuration:</p>
+        <ul>
+            <li><strong>Google Gemini API:</strong> Processes AI queries. See Google's privacy policy for details.</li>
+            <li><strong>OpenAI API:</strong> Processes AI queries. See OpenAI's privacy policy for details.</li>
+            <li><strong>Ollama (Local):</strong> If you run Ollama locally, no third-party involvement occurs.</li>
+        </ul>
+        <p>When using third-party providers, the data you send is subject to their privacy policies, not ours.</p>
+
+        <h2>6. Permissions Explained</h2>
+        <p>QuickAI requests the following browser permissions:</p>
+        <ul>
+            <li><strong>storage:</strong> To save your conversation history and preferences locally on your device.</li>
+        </ul>
+        <p>We explicitly do NOT request:</p>
+        <ul>
+            <li>Tabs permission (we don't access your browser tabs)</li>
+            <li>WebRequest permission (we don't intercept or monitor web traffic)</li>
+            <li>Scripting permission (we don't modify web pages)</li>
+        </ul>
+
+        <h2>7. Security</h2>
+        <p>QuickAI employs the following security measures:</p>
+        <ul>
+            <li>All communication with external AI providers uses HTTPS encryption.</li>
+            <li>Local data is stored securely using Chrome's built-in storage mechanisms.</li>
+            <li>No sensitive data is logged or transmitted for debugging purposes.</li>
+            <li>The Extension is open-source. Users can review the code at any time.</li>
+        </ul>
+
+        <h2>8. Data Deletion</h2>
+        <p>You can delete your local data at any time:</p>
+        <ul>
+            <li>Access the Extension's settings page</li>
+            <li>Clear your conversation history or disable the history feature</li>
+            <li>Uninstall the Extension to remove all associated data</li>
+            <li>To delete data sent to third-party AI providers, contact those providers directly</li>
+        </ul>
+
+        <h2>9. Changes to This Privacy Policy</h2>
+        <p>We may update this Privacy Policy from time to time. We will notify users of significant changes through the Extension's update information. Your continued use of the Extension constitutes acceptance of any changes.</p>
+
+        <h2>10. Contact & Support</h2>
+        <p>For questions or concerns about this Privacy Policy, please open an issue on our GitHub repository or contact the Extension maintainer.</p>
+
+        <h2>11. Compliance</h2>
+        <p>QuickAI is designed to comply with:</p>
+        <ul>
+            <li>Chrome Web Store policies and requirements</li>
+            <li>GDPR principles (we collect minimal data)</li>
+            <li>Privacy-by-design principles</li>
+        </ul>
+
+        <h2>12. Disclaimer</h2>
+        <p>This Extension is provided "as is" without any warranties. Users assume full responsibility for:</p>
+        <ul>
+            <li>Managing their own API keys securely</li>
+            <li>Understanding the privacy policies of third-party AI providers</li>
+            <li>Ensuring local installations (like Ollama) are properly secured</li>
+        </ul>
+
+        <hr style="margin-top: 40px; margin-bottom: 40px; border: none; border-top: 1px solid #ddd;">
+        <p style="text-align: center; color: #666; font-size: 14px;">
+            © 2025-2026 QuickAI. All rights reserved. | Privacy-focused AI Assistant Browser Extension
+        </p>
+    </div>
+</body>
+</html>
