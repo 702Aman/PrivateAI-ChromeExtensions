@@ -24,7 +24,7 @@ This is a **personal browser extension application** that provides quick access 
 
 ## 🚀 Preview
 
-![Extension Preview](assets/Screen Recording 2026-01-07 at 4.51.35 AM.gif)
+![Extension Preview](assets/QuickAi-ScreenShot.gif)
 
 ## 🛠 Prerequisites
 
