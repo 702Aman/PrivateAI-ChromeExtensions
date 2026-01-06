@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickAI - Settings</title>
+  <style>
+    :root {
+      --bg-main: #0f1115;
+      --bg-card: #161a22;
+      --bg-soft: #1d2230;
+      --border: #2a2f3a;
+      --text-main: #e6e8ee;
+      --text-muted: #9aa1b2;
+      --blue: #3b82f6;
+      --blue-hover: #2563eb;
+      --blue-light: #4f8cff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 32px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--text-main) 0%, var(--blue) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Section */
+    .section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .section h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text-main);
+    }
+
+    /* Form Group */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(180deg, #1b2030, #141824);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--text-main);
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    input[type="text"]::placeholder,
+    input[type="password"]::placeholder {
+      color: var(--text-muted);
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239aa1b2' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    .helper-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Info Box */
+    .info {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    .info strong {
+      color: var(--blue-light);
+    }
+
+    .link {
+      color: var(--blue);
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .link:hover {
+      color: var(--blue-light);
+    }
+
+    /* Status Messages */
+    .status {
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: none;
+      font-size: 14px;
+      border: 1px solid;
+    }
+
+    .status.success {
+      background: rgba(34, 197, 94, 0.1);
+      border-color: rgba(34, 197, 94, 0.3);
+      color: #86efac;
+      display: block;
+    }
+
+    .status.error {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      display: block;
+    }
+
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .save-btn {
+      background: linear-gradient(180deg, var(--blue-light), var(--blue-hover));
+      color: white;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
+    }
+
+    .save-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(59, 130, 246, 0.4);
+    }
+
+    .save-btn:active {
+      transform: translateY(0);
+    }
+
+    .back-btn {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+    }
+
+    .back-btn:hover {
+      background: #252d3a;
+      border-color: #3a4555;
+    }
+
+    /* About Section */
+    .about-content {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .about-content p {
+      margin-bottom: 10px;
+    }
+
+    .about-content p:last-child {
+      margin-bottom: 0;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .about-content strong {
+      color: var(--text-main);
+    }
+
+    /* Settings Panel Toggle */
+    .settings-panel,
+    .info-panel {
+      display: none;
+    }
+
+    .settings-panel.active,
+    .info-panel.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>⚙️ QuickAI Settings</h1>
+      <p>Configure your AI provider and preferences</p>
+    </div>
+
+    <!-- API Configuration Section -->
+    <div class="section">
+      <h2>API Configuration</h2>
+      <div id="status" class="status"></div>
+
+      <div class="form-group">
+        <label for="apiProvider">AI Provider:</label>
+        <select id="apiProvider">
+          <option value="gemini">Google Gemini (Free)</option>
+          <option value="openai">OpenAI ChatGPT (Paid)</option>
+          <option value="ollama">Local Ollama (Free)</option>
+        </select>
+        <div class="helper-text">Choose where your AI requests will be sent</div>
+      </div>
+
+      <div id="geminiInfo" class="info info-panel active">
+        📌 Get a <strong>FREE</strong> Gemini API key: <span class="link" id="geminiLink">Google AI Studio</span>
+      </div>
+
+      <!-- Gemini Settings -->
+      <div id="geminiSettings" class="settings-panel active">
+        <div class="form-group">
+          <label for="geminiApiKey">Gemini API Key:</label>
+          <input type="password" id="geminiApiKey" placeholder="Enter your Gemini API key">
+          <div class="helper-text">Your API key is stored locally and never shared</div>
+        </div>
+      </div>
+
+      <!-- OpenAI Settings -->
+      <div id="openaiSettings" class="settings-panel">
+        <div class="form-group">
+          <label for="openaiApiKey">OpenAI API Key:</label>
+          <input type="password" id="openaiApiKey" placeholder="Enter your OpenAI API key">
+          <div class="helper-text">Your API key is stored locally and never shared</div>
+        </div>
+      </div>
+
+      <!-- Ollama Settings -->
+      <div id="ollamaSettings" class="settings-panel">
+        <div class="form-group">
+          <label for="ollamaEndpoint">Ollama Endpoint:</label>
+          <input type="text" id="ollamaEndpoint" placeholder="http://localhost:11434">
+          <div class="helper-text">Where Ollama is running locally</div>
+        </div>
+        <div class="form-group">
+          <label for="ollamaModel">Model:</label>
+          <input type="text" id="ollamaModel" placeholder="e.g., llama3:latest">
+          <div class="helper-text">Which Ollama model to use</div>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button class="save-btn" id="saveBtn">💾 Save Settings</button>
+        <button class="back-btn" id="backBtn">← Back</button>
+      </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="section">
+      <h2>About QuickAI</h2>
+      <div class="about-content">
+        <p><strong>Version:</strong> 1.2.0</p>
+        <p>Local AI · Fast · Private</p>
+        <p>All data is stored locally. We don't track or store your conversations.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>
