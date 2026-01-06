@@ -181,8 +181,7 @@ document.getElementById("askBtn").addEventListener("click", async () => {
 
   try {
     const response = await sendMessageWithTimeout({
-      type: "ask-ollama",
-      model: "llama3:latest",
+      type: "ask-ai",
       prompt: questionInput.trim(),
       stream: false
     });
@@ -213,6 +212,11 @@ document.getElementById("askBtn").addEventListener("click", async () => {
 
 // Clear history button
 document.getElementById('clearHistoryBtn').addEventListener('click', clearAllHistory);
+
+// Settings button
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  chrome.runtime.openOptionsPage();
+});
 
 // Load history on popup open
 loadHistory();
