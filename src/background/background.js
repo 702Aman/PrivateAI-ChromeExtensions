@@ -1,12 +1,10 @@
 // Constants
-const OLLAMA_ENDPOINT = "http://localhost:11434/api/generate";
-const REQUEST_TIMEOUT = 30000; // 30 seconds
+const REQUEST_TIMEOUT = 30000;
 const RETRY_ATTEMPTS = 1;
 
 // Validate message format
 function validateMessage(msg) {
-  if (!msg.type || msg.type !== "ask-ollama") return false;
-  if (!msg.model || typeof msg.model !== 'string') return false;
+  if (!msg.type || msg.type !== "ask-ai") return false;
   if (!msg.prompt || typeof msg.prompt !== 'string') return false;
   return true;
 }
@@ -21,102 +19,205 @@ function fetchWithTimeout(url, options, timeout = REQUEST_TIMEOUT) {
   ]);
 }
 
-// Get error message based on status
-function getErrorMessage(err, status) {
-  if (err.message === 'Request timeout') {
-    return 'Ollama request timed out. Is Ollama running? (http://localhost:11434)';
-  }
-  if (status === 404) {
-    return 'Model not found. Did you pull it? Try: ollama pull llama3:latest';
-  }
-  if (status === 500) {
-    return 'Ollama server error. Check Ollama logs.';
-  }
-  if (status === 503) {
-    return 'Ollama server unavailable. Is it running?';
-  }
-  if (err.message.includes('Failed to fetch')) {
-    return 'Cannot connect to Ollama. Make sure it\'s running on http://localhost:11434';
-  }
-  return err.message || 'Unknown error';
+// Get Chrome storage
+function chromeStorageGet(keys) {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(keys, resolve);
+  });
 }
 
-// Query Ollama API with retry logic
-async function queryOllama(model, prompt) {
-  let lastError;
-  let lastStatus;
+// Query Gemini API
+async function queryGemini(apiKey, prompt) {
+  try {
+    console.log("Background: Querying Gemini API...");
+    console.log("API Key format:", apiKey ? `${apiKey.substring(0, 10)}...` : 'empty');
 
-  for (let attempt = 0; attempt <= RETRY_ATTEMPTS; attempt++) {
-    try {
-      console.log(`Background: Attempt ${attempt + 1}/${RETRY_ATTEMPTS + 1}`);
-      console.log("Background: Fetching from Ollama...", { model, promptLength: prompt.length });
+    // Try gemini-2.0-flash (latest model)
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    console.log("Endpoint:", url.substring(0, 80) + "...");
 
-      const response = await fetchWithTimeout(
-        OLLAMA_ENDPOINT,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            model: model,
-            prompt: prompt,
-            stream: false
-          })
-        }
-      );
+    const response = await fetchWithTimeout(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [{ text: prompt }]
+          }
+        ]
+      })
+    });
 
-      lastStatus = response.status;
-      console.log("Background: Response status", response.status);
+    console.log("Response status:", response.status);
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      const data = await response.json();
+    if (!response.ok) {
+      const errorBody = await response.text();
+      console.log("Error body:", errorBody);
       
-      // Validate response
-      if (!data || typeof data.response !== 'string') {
-        throw new Error('Invalid response format from Ollama');
+      if (response.status === 400) {
+        throw new Error('Invalid request - Check your API key format (should start with AIza...)');
       }
-
-      console.log("Background: Success", { responseLength: data.response.length });
-      return { ok: true, data: data.response };
-
-    } catch (err) {
-      lastError = err;
-      console.error(`Background: Error on attempt ${attempt + 1}:`, err.message);
-
-      // Don't retry on timeout or 404
-      if (err.message === 'Request timeout' || lastStatus === 404) {
-        break;
+      if (response.status === 401) {
+        throw new Error('Invalid/Unauthorized API key. Verify it in Google AI Studio settings.');
       }
-
-      // Wait before retry
-      if (attempt < RETRY_ATTEMPTS) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+      if (response.status === 403) {
+        throw new Error('Access denied. Enable Generative Language API in your Google Cloud project.');
       }
+      if (response.status === 404) {
+        throw new Error('API endpoint not found (404). Your API key may not be valid or Generative Language API is not enabled.');
+      }
+      if (response.status === 429) {
+        throw new Error('Free tier quota exceeded for Gemini API. Please set up billing in Google Cloud Console or wait a few moments.');
+      }
+      if (response.status === 500) {
+        throw new Error('Gemini API server error. Try again later.');
+      }
+      throw new Error(`HTTP ${response.status}: ${errorBody || 'Unknown error'}`);
     }
-  }
 
-  const errorMessage = getErrorMessage(lastError, lastStatus);
-  console.error("Background: Final error:", errorMessage);
-  return { ok: false, error: errorMessage };
+    const data = await response.json();
+    console.log("Gemini response received");
+    
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+      console.error("Invalid response structure:", data);
+      throw new Error('Invalid response from Gemini - no content returned');
+    }
+
+    const text = data.candidates[0].content.parts[0].text;
+    return { success: true, data: text };
+  } catch (err) {
+    console.error('Gemini error:', err);
+    return {
+      success: false,
+      error: err.message || 'Failed to query Gemini'
+    };
+  }
 }
 
-// Message listener
+// Query OpenAI API
+async function queryOpenAI(apiKey, prompt) {
+  try {
+    console.log("Background: Querying OpenAI API...");
+
+    const response = await fetchWithTimeout(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.7,
+          max_tokens: 1000
+        })
+      }
+    );
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('Invalid API key. Please check your OpenAI API key in settings.');
+      }
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const text = data.choices[0].message.content;
+    return { success: true, data: text };
+  } catch (err) {
+    console.error('OpenAI error:', err);
+    return {
+      success: false,
+      error: err.message || 'Failed to query OpenAI'
+    };
+  }
+}
+
+// Query Ollama API
+async function queryOllama(endpoint, model, prompt) {
+  try {
+    console.log("Background: Querying Ollama...", { model });
+
+    const response = await fetchWithTimeout(
+      `${endpoint}/api/generate`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: model,
+          prompt: prompt,
+          stream: false
+        })
+      }
+    );
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error(`Model not found: ${model}. Did you pull it?`);
+      }
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (!data || typeof data.response !== 'string') {
+      throw new Error('Invalid response from Ollama');
+    }
+
+    return { success: true, data: data.response };
+  } catch (err) {
+    console.error('Ollama error:', err);
+    return {
+      success: false,
+      error: err.message || 'Cannot connect to Ollama. Is it running?'
+    };
+  }
+}
+
+// Main message handler
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!validateMessage(msg)) {
     sendResponse({ ok: false, error: 'Invalid message format' });
-    return false;
+    return;
   }
 
-  // Call async function
-  queryOllama(msg.model, msg.prompt).then(result => {
-    sendResponse(result);
-  }).catch(err => {
-    console.error("Background: Unhandled error:", err);
-    sendResponse({ ok: false, error: 'Unexpected error: ' + err.message });
-  });
+  // Handle async operation
+  (async () => {
+    try {
+      const config = await chromeStorageGet(['apiConfig']);
+      const apiConfig = config.apiConfig || { provider: 'gemini' };
 
-  // Indicate async response
-  return true;
+      let result;
+
+      if (apiConfig.provider === 'gemini') {
+        if (!apiConfig.geminiApiKey) {
+          return sendResponse({ ok: false, error: 'Gemini API key not configured. Open settings to add it.' });
+        }
+        result = await queryGemini(apiConfig.geminiApiKey, msg.prompt);
+      } else if (apiConfig.provider === 'openai') {
+        if (!apiConfig.openaiApiKey) {
+          return sendResponse({ ok: false, error: 'OpenAI API key not configured. Open settings to add it.' });
+        }
+        result = await queryOpenAI(apiConfig.openaiApiKey, msg.prompt);
+      } else if (apiConfig.provider === 'ollama') {
+        result = await queryOllama(
+          apiConfig.ollamaEndpoint || 'http://localhost:11434',
+          apiConfig.ollamaModel || 'llama3:latest',
+          msg.prompt
+        );
+      }
+
+      if (result.success) {
+        sendResponse({ ok: true, data: result.data });
+      } else {
+        sendResponse({ ok: false, error: result.error });
+      }
+    } catch (err) {
+      console.error('Error:', err);
+      sendResponse({ ok: false, error: err.message });
+    }
+  })();
+
+  return true; // Keep channel open for async response
 });
