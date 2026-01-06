@@ -1,24 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Private AI Assistant</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>QuickAI</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-  <h2>Private AI Assistant</h2>
-  <p class="description">Powered by local AI models for fast, private responses</p>
+  <div class="app">
 
-  <textarea id="input" placeholder="Type your question..."></textarea>
-  <button id="askBtn">Ask AI</button>
+    <!-- Header -->
+    <header class="header">
+      <h1 class="logo">
+        Quick<span>AI</span>
+      </h1>
+      <p class="tagline">Local AI · Fast · Private</p>
+    </header>
 
-  <div id="response"></div>
+    <!-- Input -->
+    <section class="input-section">
+      <textarea
+        id="input"
+        class="prompt-input"
+        placeholder="Ask anything… Try: Summarize this page"
+      ></textarea>
+      <div class="helper-text">Shift + Enter for new line</div>
+    </section>
 
-  <div id="historySection" class="history-section">
-    <div class="history-header">
-      <h3>Conversation History</h3>
-      <button id="clearHistoryBtn" class="clear-btn" title="Clear all history">Clear All</button>
-    </div>
-    <div id="historyList" class="history-list"></div>
+    <!-- Primary Button -->
+    <button id="askBtn" class="primary-btn">Ask AI</button>
+
+    <!-- Response Panel -->
+    <section id="response" class="response-panel">
+      AI responses will appear here
+    </section>
+
+    <!-- Conversation History -->
+    <section class="history">
+      <div class="history-header">
+        <span>Conversation History</span>
+        <button id="clearHistoryBtn" class="link-btn">Clear</button>
+      </div>
+
+      <div id="historyList" class="history-list">
+        <div class="history-empty">
+          <div class="empty-icon">💬</div>
+          <p>No conversations yet</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <button id="settingsBtn" class="settings-btn">
+        ⚙️ <span>Settings</span>
+      </button>
+    </footer>
+
   </div>
 
   <script src="popup.js"></script>
