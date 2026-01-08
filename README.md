@@ -25,6 +25,12 @@ This extension provides quick access to local AI models via a simple popup inter
 - **Zero External Dependencies** - Works offline with local Ollama
 - **Professional UX** - Gradient buttons, smooth transitions, hover effects
 
+## 📸 Screenshots
+
+![Popup UI](assets/screenshots/popup.png)
+
+![Settings Page](assets/screenshots/settings.png)
+
 ## 🛠 Prerequisites
 
 Before using this extension, you need **at least one** of the following:
