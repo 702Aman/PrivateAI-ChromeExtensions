@@ -27,9 +27,9 @@ This extension provides quick access to local AI models via a simple popup inter
 
 ## 📸 Screenshots
 
-![Popup UI](assets/screenshots/popup.png)
+![Popup UI](assets/popup.png)
 
-![Settings Page](assets/screenshots/settings.png)
+![Settings Page](assets/settings.png)
 
 ## 🛠 Prerequisites
 
