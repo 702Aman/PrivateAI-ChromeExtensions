@@ -24,6 +24,8 @@ This extension provides quick access to local AI models via a simple popup inter
 - **Smart Settings** - Provider-specific configuration with validation
 - **Zero External Dependencies** - Works offline with local Ollama
 - **Professional UX** - Gradient buttons, smooth transitions, hover effects
+- **Ollama Connection Status** - Real-time indicator showing if Ollama is running
+- **Smart Setup Guide** - Contextual help in settings page for Ollama configuration
 
 ## 📸 Screenshots
 
