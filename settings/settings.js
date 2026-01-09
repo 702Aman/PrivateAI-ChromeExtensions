@@ -43,6 +43,7 @@ function updateProviderSettings(provider) {
   document.getElementById('openaiSettings').classList.remove('active');
   document.getElementById('ollamaSettings').classList.remove('active');
   document.getElementById('geminiInfo').classList.remove('active');
+  document.getElementById('ollamaInfo').classList.remove('active');
   
   if (provider === 'gemini') {
     document.getElementById('geminiSettings').classList.add('active');
@@ -51,6 +52,9 @@ function updateProviderSettings(provider) {
     document.getElementById('openaiSettings').classList.add('active');
   } else if (provider === 'ollama') {
     document.getElementById('ollamaSettings').classList.add('active');
+    document.getElementById('ollamaInfo').classList.add('active');
+    document.getElementById('ollamaStatus').style.display = 'flex';
+    checkOllamaConnection();
   }
 }
 
@@ -62,11 +66,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('saveBtn').addEventListener('click', saveSettings);
   document.getElementById('backBtn').addEventListener('click', goBack);
   document.getElementById('geminiLink').addEventListener('click', openGeminiLink);
+  document.getElementById('ollamaLink').addEventListener('click', openOllamaLink);
+  document.getElementById('githubLink').addEventListener('click', openGithubLink);
   
   // Provider change handler
   document.getElementById('apiProvider').addEventListener('change', (e) => {
     updateProviderSettings(e.target.value);
   });
+
+  // Ollama connection check on endpoint/model changes
+  document.getElementById('ollamaEndpoint').addEventListener('change', checkOllamaConnection);
+  document.getElementById('ollamaEndpoint').addEventListener('keyup', debounceCheckOllama);
+  document.getElementById('ollamaModel').addEventListener('change', checkOllamaConnection);
 });
 async function saveSettings() {
   const provider = document.getElementById('apiProvider').value;
@@ -137,6 +148,60 @@ function showStatus(message, type) {
 // Open Gemini API link
 function openGeminiLink() {
   chrome.tabs.create({ url: 'https://aistudio.google.com/app/api-keys' });
+}
+
+// Open Ollama link
+function openOllamaLink() {
+  chrome.tabs.create({ url: 'https://ollama.ai' });
+}
+
+// Open GitHub link
+function openGithubLink() {
+  chrome.tabs.create({ url: 'https://github.com/702Aman/PrivateAI-ChromeExtensions' });
+}
+
+// Debounce for checking Ollama connection during typing
+let ollamaCheckTimeout;
+function debounceCheckOllama() {
+  clearTimeout(ollamaCheckTimeout);
+  ollamaCheckTimeout = setTimeout(checkOllamaConnection, 800);
+}
+
+// Check Ollama connection status
+async function checkOllamaConnection() {
+  const endpoint = document.getElementById('ollamaEndpoint').value.trim();
+  const statusEl = document.getElementById('ollamaStatus');
+
+  if (!endpoint) {
+    statusEl.textContent = 'Enter endpoint to check';
+    statusEl.classList.remove('connected');
+    statusEl.classList.add('disconnected');
+    return;
+  }
+
+  statusEl.textContent = 'Checking connection...';
+  statusEl.classList.remove('connected', 'disconnected');
+
+  try {
+    const response = await fetch(`${endpoint}/api/tags`, {
+      method: 'GET',
+      timeout: 5000
+    });
+
+    if (response.ok) {
+      statusEl.innerHTML = '<div class="ollama-status-dot"></div><span>✅ Connected</span>';
+      statusEl.classList.remove('disconnected');
+      statusEl.classList.add('connected');
+    } else {
+      statusEl.innerHTML = '<div class="ollama-status-dot"></div><span>❌ Connection failed</span>';
+      statusEl.classList.remove('connected');
+      statusEl.classList.add('disconnected');
+    }
+  } catch (err) {
+    statusEl.innerHTML = '<div class="ollama-status-dot"></div><span>❌ Ollama not running</span>';
+    statusEl.classList.remove('connected');
+    statusEl.classList.add('disconnected');
+  }
 }
 
 // Go back to popup
