@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-01-08
+
+### Added
+- **Ollama Connection Status Indicator** - Real-time connection status in settings page
+  - Shows ✅ Connected (green) when Ollama is reachable
+  - Shows ❌ Disconnected (red) when unreachable
+  - Auto-checks when Ollama is selected
+  - Debounced checking while user types endpoint (800ms delay)
+
+- **Ollama Setup Guide** - Enhanced info box in settings page
+  - Explains how Ollama works
+  - Shows terminal command: `OLLAMA_ORIGINS="*" ollama serve`
+  - Link to download Ollama
+  - Only appears when Ollama provider is selected
+
+- **GitHub Repository Link** - Quick access to source code
+  - Added "View on GitHub" link in About section
+  - Points to: https://github.com/702Aman/PrivateAI-ChromeExtensions
+
+### Changed
+- Updated README with complete Ollama setup instructions including CORS command
+- Improved Ollama prerequisites documentation with required terminal command
+- Settings page now provides contextual guidance for Ollama users
+
 ## [1.2.0] - 2026-01-07
 
 ### Added
