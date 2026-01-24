@@ -26,8 +26,8 @@ function chromeStorageGet(keys) {
   });
 }
 
-// Query Gemini API
-async function queryGemini(apiKey, prompt) {
+// Query Gemini API with streaming support
+async function queryGemini(apiKey, prompt, streamCallback = null) {
   try {
     console.log("Background: Querying Gemini API...");
     console.log("API Key format:", apiKey ? `${apiKey.substring(0, 10)}...` : 'empty');
@@ -84,6 +84,16 @@ async function queryGemini(apiKey, prompt) {
     }
 
     const text = data.candidates[0].content.parts[0].text;
+    
+    // Stream the response if callback provided
+    if (streamCallback) {
+      const words = text.split(' ');
+      for (const word of words) {
+        streamCallback(word + ' ');
+        await new Promise(resolve => setTimeout(resolve, 30)); // 30ms delay between words
+      }
+    }
+    
     return { success: true, data: text };
   } catch (err) {
     console.error('Gemini error:', err);
@@ -94,8 +104,8 @@ async function queryGemini(apiKey, prompt) {
   }
 }
 
-// Query OpenAI API
-async function queryOpenAI(apiKey, prompt) {
+// Query OpenAI API with streaming support
+async function queryOpenAI(apiKey, prompt, streamCallback = null) {
   try {
     console.log("Background: Querying OpenAI API...");
 
@@ -125,6 +135,16 @@ async function queryOpenAI(apiKey, prompt) {
 
     const data = await response.json();
     const text = data.choices[0].message.content;
+    
+    // Stream the response if callback provided
+    if (streamCallback) {
+      const words = text.split(' ');
+      for (const word of words) {
+        streamCallback(word + ' ');
+        await new Promise(resolve => setTimeout(resolve, 30)); // 30ms delay between words
+      }
+    }
+    
     return { success: true, data: text };
   } catch (err) {
     console.error('OpenAI error:', err);
@@ -135,8 +155,8 @@ async function queryOpenAI(apiKey, prompt) {
   }
 }
 
-// Query Ollama API
-async function queryOllama(endpoint, model, prompt) {
+// Query Ollama API with streaming support
+async function queryOllama(endpoint, model, prompt, streamCallback = null) {
   try {
     console.log("Background: Querying Ollama...", { model });
 
@@ -165,6 +185,15 @@ async function queryOllama(endpoint, model, prompt) {
       throw new Error('Invalid response from Ollama');
     }
 
+    // Stream the response if callback provided
+    if (streamCallback) {
+      const words = data.response.split(' ');
+      for (const word of words) {
+        streamCallback(word + ' ');
+        await new Promise(resolve => setTimeout(resolve, 30)); // 30ms delay between words
+      }
+    }
+
     return { success: true, data: data.response };
   } catch (err) {
     console.error('Ollama error:', err);
@@ -175,7 +204,7 @@ async function queryOllama(endpoint, model, prompt) {
   }
 }
 
-// Main message handler
+// Main message handler with streaming support
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!validateMessage(msg)) {
     sendResponse({ ok: false, error: 'Invalid message format' });
@@ -189,27 +218,38 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       const apiConfig = config.apiConfig || { provider: 'gemini' };
 
       let result;
+      
+      // Stream callback to send chunks to the popup
+      const streamCallback = (chunk) => {
+        chrome.runtime.sendMessage(sender.tab.id, {
+          type: 'stream-chunk',
+          chunk: chunk
+        }).catch(err => {
+          console.log('Stream message send error (may be expected if popup closed):', err);
+        });
+      };
 
       if (apiConfig.provider === 'gemini') {
         if (!apiConfig.geminiApiKey) {
           return sendResponse({ ok: false, error: 'Gemini API key not configured. Open settings to add it.' });
         }
-        result = await queryGemini(apiConfig.geminiApiKey, msg.prompt);
+        result = await queryGemini(apiConfig.geminiApiKey, msg.prompt, streamCallback);
       } else if (apiConfig.provider === 'openai') {
         if (!apiConfig.openaiApiKey) {
           return sendResponse({ ok: false, error: 'OpenAI API key not configured. Open settings to add it.' });
         }
-        result = await queryOpenAI(apiConfig.openaiApiKey, msg.prompt);
+        result = await queryOpenAI(apiConfig.openaiApiKey, msg.prompt, streamCallback);
       } else if (apiConfig.provider === 'ollama') {
         result = await queryOllama(
           apiConfig.ollamaEndpoint || 'http://localhost:11434',
           apiConfig.ollamaModel || 'llama3:latest',
-          msg.prompt
+          msg.prompt,
+          streamCallback
         );
       }
 
       if (result.success) {
-        sendResponse({ ok: true, data: result.data });
+        sendResponse({ ok: true, data: result.data, streaming: true });
       } else {
         sendResponse({ ok: false, error: result.error });
       }
