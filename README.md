@@ -11,7 +11,7 @@ This extension provides quick access to local AI models via a simple popup inter
 ## ✨ Features
 
 - **Multiple AI Providers** - Support for Google Gemini, OpenAI ChatGPT, and Local Ollama
-- **Modern Dark Theme UI** - Professional gradient design with smooth animations
+- **Dark & Light Theme UI** - Professional gradient design with smooth animations and full light theme support
 - **Local AI Processing** - All queries are processed locally on your machine
 - **Private & Secure** - No data sent to external services (when using Ollama)
 - **Conversation History** - Auto-saves up to 50 recent Q&A conversations with timestamps
@@ -26,6 +26,9 @@ This extension provides quick access to local AI models via a simple popup inter
 - **Professional UX** - Gradient buttons, smooth transitions, hover effects
 - **Ollama Connection Status** - Real-time indicator showing if Ollama is running
 - **Smart Setup Guide** - Contextual help in settings page for Ollama configuration
+- **Streaming Responses** - Word-by-word streaming display for better UX
+- **Theme Persistence** - Your theme preference saved across sessions
+- **Complete Light Theme Support** - All UI elements properly styled in light mode (inputs, buttons, textarea, settings)
 
 ## 📸 Screenshots
 
@@ -58,6 +61,10 @@ Before using this extension, you need **at least one** of the following:
    ```bash
    ollama pull llama3:latest
    ```
+4. **Run Ollama with CORS enabled** (required for browser access):
+   ```bash
+   OLLAMA_ORIGINS="*" ollama serve
+   ```
 
 ## 📦 Installation
 
@@ -81,8 +88,9 @@ Before using this extension, you need **at least one** of the following:
 
 2. **Start Your AI Service** (if using Ollama)
    ```bash
-   ollama serve
+   OLLAMA_ORIGINS="*" ollama serve
    ```
+   This enables CORS so the browser extension can communicate with Ollama.
 
 ### Asking Questions
 
@@ -300,9 +308,7 @@ This extension uses **Manifest V3** (MV3), the latest web extension standard sup
 
 ## 📄 License
 
-This project is released under the **Unlicense** – it is in the public domain. You are free to use, modify, and distribute this software without any restrictions or obligations.
-
-For more information, see [unlicense.org](https://unlicense.org)
+This project is licensed under the **MIT License**.
 
 ## 🤝 Contributing
 
@@ -312,14 +318,21 @@ This is a personal project. For suggestions, improvements, or bug reports, feel 
 
 See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
 
-### Latest Updates (v1.2.0)
+### Latest Updates (v1.2.0+)
 - ✨ Modern dark theme UI with gradient design
 - 🎨 Professional settings page with provider-specific configuration
+- 🌞 **Complete Light Theme Support** - All UI elements fully styled for light mode
+  - Input fields, textareas, and buttons properly convert to light theme
+  - Settings page responsive to theme changes
+  - Settings button theme-aware styling
 - 🔄 Support for multiple AI providers (Gemini, OpenAI, Ollama)
 - ⚙️ Improved settings management and validation
 - 🎯 Better error messages and user guidance
 - 📱 Responsive design for popup and settings
 - ⏱️ Conversation history with timestamps
+- 🚀 Streaming response display for better UX
+- 🔐 Enhanced security with proper input sanitization
+- 🎭 Theme preference persistence across sessions
 
 ## 🎓 Learning Resources
 
@@ -328,3 +341,4 @@ See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
 - [Google Gemini API](https://ai.google.dev/)
 - [OpenAI API Documentation](https://platform.openai.com/docs/)
 - [Ollama Documentation](https://github.com/ollama/ollama)
+
