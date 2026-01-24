@@ -17,6 +17,18 @@
       --blue-light: #4f8cff;
     }
 
+    body.light-theme {
+      --bg-main: #f8f9fa;
+      --bg-card: #ffffff;
+      --bg-soft: #f0f3f7;
+      --border: #e1e8ed;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --blue: #3b82f6;
+      --blue-hover: #2563eb;
+      --blue-light: #4f8cff;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -102,6 +114,16 @@
       transition: all 0.2s ease;
     }
 
+    body.light-theme input[type="text"],
+    body.light-theme input[type="password"],
+    body.light-theme textarea,
+    body.light-theme select {
+      background: #f3f4f6 !important;
+      background-color: #f3f4f6 !important;
+      color: var(--text-main) !important;
+      border-color: #e1e8ed !important;
+    }
+
     input[type="text"]::placeholder,
     input[type="password"]::placeholder {
       color: var(--text-muted);
@@ -122,6 +144,13 @@
       background-repeat: no-repeat;
       background-position: right 12px center;
       padding-right: 36px;
+    }
+
+    body.light-theme select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-color: #f3f4f6;
+      background-repeat: no-repeat;
+      background-position: right 12px center;
     }
 
     .helper-text {
@@ -301,6 +330,59 @@
         opacity: 0.5;
       }
     }
+
+    /* Theme Toggle Switch */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .theme-toggle-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 28px;
+      background: var(--border);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      border: 1px solid var(--border);
+    }
+
+    .toggle-switch.active {
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
+    .toggle-switch-slider {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .toggle-switch.active .toggle-switch-slider {
+      transform: translateX(22px);
+    }
+
+    .toggle-icon {
+      font-size: 12px;
+    }
   </style>
 </head>
 <body>
@@ -315,6 +397,16 @@
     <div class="section">
       <h2>API Configuration</h2>
       <div id="status" class="status"></div>
+
+      <!-- Theme Toggle -->
+      <div class="theme-toggle">
+        <span class="theme-toggle-label">🌙 Theme</span>
+        <div class="toggle-switch" id="themeToggle">
+          <div class="toggle-switch-slider">
+            <span class="toggle-icon" id="themeIcon">🌙</span>
+          </div>
+        </div>
+      </div>
 
       <div class="form-group">
         <label for="apiProvider">AI Provider:</label>
