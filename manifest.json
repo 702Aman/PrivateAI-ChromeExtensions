@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "QuickAI",
-  "version": "1.2.0",
-  "description": "AI assistant with Gemini, ChatGPT, or local Ollama support",
+  "version": "1.2.2",
+  "description": "Enterprise-grade AI assistant extension supporting Google Gemini, OpenAI ChatGPT, and self-hosted Ollama. Privacy-first design with local processing, conversation history, and dark/light themes.",
   "icons": {
     "128": "AIQUICK.png"
   },
