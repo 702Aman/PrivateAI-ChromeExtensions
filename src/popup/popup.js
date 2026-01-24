@@ -1,3 +1,18 @@
+// Load and apply saved theme
+async function applyTheme() {
+  try {
+    const result = await chromeStorageGet(['theme']);
+    const theme = result.theme || 'dark';
+    
+    if (theme === 'light') {
+      document.documentElement.classList.add('light-theme');
+      document.body.classList.add('light-theme');
+    }
+  } catch (err) {
+    console.error('Error loading theme:', err);
+  }
+}
+
 // Constants
 const MAX_HISTORY = 50;
 const REQUEST_TIMEOUT = 30000; // 30 seconds
@@ -159,7 +174,7 @@ function sendMessageWithTimeout(message, timeout = REQUEST_TIMEOUT) {
   });
 }
 
-// Ask button click handler
+// Ask button click handler with streaming support
 document.getElementById("askBtn").addEventListener("click", async () => {
   const questionInput = document.getElementById("input").value;
   const responseDiv = document.getElementById("response");
@@ -174,18 +189,33 @@ document.getElementById("askBtn").addEventListener("click", async () => {
 
   // Disable button and show loading state
   askBtn.disabled = true;
-  responseDiv.innerHTML = "Thinking...";
+  responseDiv.innerHTML = "";
   responseDiv.classList.remove('error');
-  responseDiv.classList.add('loading');
+  responseDiv.classList.add('loading', 'streaming');
   console.log("Popup: Sending message with prompt:", questionInput);
+
+  let fullResponse = '';
+  let streamingComplete = false;
+
+  // Listen for stream chunks from background
+  const messageListener = (request, sender, sendResponse) => {
+    if (request.type === 'stream-chunk') {
+      fullResponse += request.chunk;
+      responseDiv.innerHTML = escapeHtml(fullResponse);
+      responseDiv.scrollTop = responseDiv.scrollHeight; // Auto-scroll to bottom
+    }
+  };
+  
+  chrome.runtime.onMessage.addListener(messageListener);
 
   try {
     const response = await sendMessageWithTimeout({
       type: "ask-ai",
       prompt: questionInput.trim(),
-      stream: false
+      stream: true
     });
 
+    streamingComplete = true;
     console.log("Popup: Received response:", response);
 
     if (!response) {
@@ -193,8 +223,9 @@ document.getElementById("askBtn").addEventListener("click", async () => {
     }
 
     if (response.ok && response.data) {
+      fullResponse = response.data;
       responseDiv.innerHTML = escapeHtml(response.data);
-      responseDiv.classList.remove('error', 'loading');
+      responseDiv.classList.remove('error', 'loading', 'streaming');
       await saveToHistory(questionInput.trim(), response.data);
       document.getElementById("input").value = '';
     } else {
@@ -204,8 +235,9 @@ document.getElementById("askBtn").addEventListener("click", async () => {
     console.error("Popup: Error:", err);
     responseDiv.innerHTML = `❌ ${escapeHtml(err.message)}`;
     responseDiv.classList.add('error');
-    responseDiv.classList.remove('loading');
+    responseDiv.classList.remove('loading', 'streaming');
   } finally {
+    chrome.runtime.onMessage.removeListener(messageListener);
     askBtn.disabled = false;
   }
 });
@@ -220,3 +252,6 @@ document.getElementById('settingsBtn').addEventListener('click', () => {
 
 // Load history on popup open
 loadHistory();
+
+// Apply saved theme
+applyTheme();
