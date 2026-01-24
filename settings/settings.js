@@ -1,7 +1,7 @@
 // Load saved settings
 async function loadSettings() {
   try {
-    const result = await chromeStorageGet(['apiConfig']);
+    const result = await chromeStorageGet(['apiConfig', 'theme']);
     const config = result.apiConfig || {
       provider: 'gemini',
       geminiApiKey: '',
@@ -9,6 +9,12 @@ async function loadSettings() {
       ollamaEndpoint: 'http://localhost:11434',
       ollamaModel: 'llama3:latest'
     };
+
+    const theme = result.theme || 'dark';
+
+    // Set theme
+    applyTheme(theme);
+    updateThemeToggle(theme);
 
     // Set UI values
     document.getElementById('apiProvider').value = config.provider;
@@ -58,6 +64,44 @@ function updateProviderSettings(provider) {
   }
 }
 
+// Apply theme to the page
+function applyTheme(theme) {
+  if (theme === 'light') {
+    document.documentElement.classList.add('light-theme');
+    document.body.classList.add('light-theme');
+  } else {
+    document.documentElement.classList.remove('light-theme');
+    document.body.classList.remove('light-theme');
+  }
+}
+
+// Update theme toggle UI
+function updateThemeToggle(theme) {
+  const toggle = document.getElementById('themeToggle');
+  const icon = document.getElementById('themeIcon');
+  
+  if (theme === 'light') {
+    toggle.classList.add('active');
+    icon.textContent = '☀️';
+  } else {
+    toggle.classList.remove('active');
+    icon.textContent = '🌙';
+  }
+}
+
+// Handle theme toggle
+async function toggleTheme() {
+  const toggle = document.getElementById('themeToggle');
+  const isLight = toggle.classList.contains('active');
+  const newTheme = isLight ? 'dark' : 'light';
+  
+  applyTheme(newTheme);
+  updateThemeToggle(newTheme);
+  
+  // Save theme preference
+  await chromeStorageSet({ theme: newTheme });
+}
+
 // Load settings on page load
 document.addEventListener('DOMContentLoaded', () => {
   loadSettings();
@@ -68,6 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('geminiLink').addEventListener('click', openGeminiLink);
   document.getElementById('ollamaLink').addEventListener('click', openOllamaLink);
   document.getElementById('githubLink').addEventListener('click', openGithubLink);
+  
+  // Theme toggle
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
   
   // Provider change handler
   document.getElementById('apiProvider').addEventListener('change', (e) => {
