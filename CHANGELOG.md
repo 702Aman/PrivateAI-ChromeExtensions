@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2026-01-24
+
+### Added
+- **Complete Light Theme Support** - Full theme conversion across all UI components
+  - Input fields properly styled in light mode with light gray background
+  - Textarea elements convert to light theme with proper contrast
+  - Settings button responsive to theme toggle
+  - All form inputs (text, password, select) properly themed
+
+### Changed
+- Updated CSS specificity for light theme selectors to ensure gradient backgrounds are removed
+- Enhanced light theme border colors to use CSS variables for consistency
+- Improved hover states for light theme buttons
+
+### Fixed
+- ✅ **Bug**: Gemini API key input staying dark when switching to light theme
+- ✅ **Bug**: Textarea placeholder staying dark in light mode
+- ✅ **Bug**: Settings button showing dark background in light theme
+- ✅ **Bug**: Input field gradients not being overridden by light theme CSS
+- Enhanced CSS override specificity to ensure light theme takes precedence over dark gradients
+
+### Technical Details
+- `popup/style.css`: Updated `.prompt-input` light theme rules
+- `settings/settings.html`: Improved input/select light theme CSS selectors
+- `popup/style.css`: Added `.settings-btn` light theme and hover states
+- All light theme overrides now use `!important` flag with explicit background and border colors
+- Improved CSS cascade for better theme switching reliability
+
 ## [1.2.1] - 2026-01-08
 
 ### Added
