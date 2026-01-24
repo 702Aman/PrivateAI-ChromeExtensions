@@ -8,6 +8,16 @@
   --blue: #3b82f6;
 }
 
+body.light-theme {
+  --bg-main: #f8f9fa;
+  --bg-card: #ffffff;
+  --bg-soft: #f0f3f7;
+  --border: #e1e8ed;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --blue: #3b82f6;
+}
+
 * {
   box-sizing: border-box;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -65,14 +75,29 @@ body {
   font-size: 14px;
 }
 
+body.light-theme .prompt-input {
+  background: #f3f4f6 !important;
+  background-color: #f3f4f6 !important;
+  color: var(--text-main) !important;
+  border-color: #e1e8ed !important;
+}
+
 .prompt-input::placeholder {
   color: var(--text-muted);
+}
+
+body.light-theme .prompt-input::placeholder {
+  color: #9ca3af !important;
 }
 
 .helper-text {
   margin-top: 6px;
   font-size: 11px;
   color: var(--text-muted);
+}
+
+body.light-theme .helper-text {
+  color: #9ca3af !important;
 }
 
 /* Primary Button */
@@ -103,9 +128,52 @@ body {
   font-size: 13px;
   color: var(--text-muted);
   margin-bottom: 18px;
+  max-height: 300px;
+  overflow-y: auto;
+  word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
-/* History */
+/* Loading state */
+.response-panel.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  color: var(--text-muted);
+}
+
+.response-panel.loading::after {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-left: 8px;
+  background: var(--blue);
+  border-radius: 50%;
+  animation: pulse 1.4s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* Streaming effect */
+.response-panel.streaming {
+  border-color: var(--blue);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+}
+
+/* Error state */
+.response-panel.error {
+  color: #ff6b6b;
+  border-color: #ff6b6b;
+}
 .history {
   margin-top: 18px;
 }
@@ -219,6 +287,16 @@ body {
   gap: 6px;
 }
 
+body.light-theme .settings-btn {
+  background: #f0f3f7 !important;
+  border-color: #e1e8ed !important;
+  color: var(--text-main) !important;
+}
+
 .settings-btn:hover {
   background: #2a3040;
+}
+
+body.light-theme .settings-btn:hover {
+  background: #e1e8ed !important;
 }
