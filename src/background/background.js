@@ -29,12 +29,8 @@ function chromeStorageGet(keys) {
 // Query Gemini API with streaming support
 async function queryGemini(apiKey, prompt, streamCallback = null) {
   try {
-    console.log("Background: Querying Gemini API...");
-    console.log("API Key format:", apiKey ? `${apiKey.substring(0, 10)}...` : 'empty');
-
     // Try gemini-2.0-flash (latest model)
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-    console.log("Endpoint:", url.substring(0, 80) + "...");
 
     const response = await fetchWithTimeout(url, {
       method: "POST",
@@ -48,11 +44,8 @@ async function queryGemini(apiKey, prompt, streamCallback = null) {
       })
     });
 
-    console.log("Response status:", response.status);
-
     if (!response.ok) {
       const errorBody = await response.text();
-      console.log("Error body:", errorBody);
       
       if (response.status === 400) {
         throw new Error('Invalid request - Check your API key format (should start with AIza...)');
@@ -76,10 +69,8 @@ async function queryGemini(apiKey, prompt, streamCallback = null) {
     }
 
     const data = await response.json();
-    console.log("Gemini response received");
     
     if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-      console.error("Invalid response structure:", data);
       throw new Error('Invalid response from Gemini - no content returned');
     }
 
@@ -96,7 +87,6 @@ async function queryGemini(apiKey, prompt, streamCallback = null) {
     
     return { success: true, data: text };
   } catch (err) {
-    console.error('Gemini error:', err);
     return {
       success: false,
       error: err.message || 'Failed to query Gemini'
@@ -107,7 +97,6 @@ async function queryGemini(apiKey, prompt, streamCallback = null) {
 // Query OpenAI API with streaming support
 async function queryOpenAI(apiKey, prompt, streamCallback = null) {
   try {
-    console.log("Background: Querying OpenAI API...");
 
     const response = await fetchWithTimeout(
       'https://api.openai.com/v1/chat/completions',
@@ -127,13 +116,31 @@ async function queryOpenAI(apiKey, prompt, streamCallback = null) {
     );
 
     if (!response.ok) {
+      const errorBody = await response.text();
+      
       if (response.status === 401) {
         throw new Error('Invalid API key. Please check your OpenAI API key in settings.');
       }
-      throw new Error(`HTTP ${response.status}`);
+      if (response.status === 429) {
+        throw new Error('Rate limit exceeded or quota exhausted. Check your OpenAI billing.');
+      }
+      if (response.status === 500 || response.status === 503) {
+        throw new Error('OpenAI server error. Please try again later.');
+      }
+      throw new Error(`HTTP ${response.status}: ${errorBody || 'Unknown error'}`);
     }
 
     const data = await response.json();
+    
+    // Validate response structure
+    if (!data.choices || !Array.isArray(data.choices) || data.choices.length === 0) {
+      throw new Error('Invalid response from OpenAI - no choices returned');
+    }
+    
+    if (!data.choices[0].message || !data.choices[0].message.content) {
+      throw new Error('Invalid response from OpenAI - no message content');
+    }
+    
     const text = data.choices[0].message.content;
     
     // Stream the response if callback provided
@@ -147,7 +154,6 @@ async function queryOpenAI(apiKey, prompt, streamCallback = null) {
     
     return { success: true, data: text };
   } catch (err) {
-    console.error('OpenAI error:', err);
     return {
       success: false,
       error: err.message || 'Failed to query OpenAI'
@@ -158,7 +164,6 @@ async function queryOpenAI(apiKey, prompt, streamCallback = null) {
 // Query Ollama API with streaming support
 async function queryOllama(endpoint, model, prompt, streamCallback = null) {
   try {
-    console.log("Background: Querying Ollama...", { model });
 
     const response = await fetchWithTimeout(
       `${endpoint}/api/generate`,
@@ -196,7 +201,6 @@ async function queryOllama(endpoint, model, prompt, streamCallback = null) {
 
     return { success: true, data: data.response };
   } catch (err) {
-    console.error('Ollama error:', err);
     return {
       success: false,
       error: err.message || 'Cannot connect to Ollama. Is it running?'
@@ -221,12 +225,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       
       // Stream callback to send chunks to the popup
       const streamCallback = (chunk) => {
-        chrome.runtime.sendMessage(sender.tab.id, {
+        // Use chrome.runtime.sendMessage without tabId for popup communication
+        // sender.tab is undefined when message comes from popup
+        chrome.runtime.sendMessage({
           type: 'stream-chunk',
           chunk: chunk
-        }).catch(err => {
-          console.log('Stream message send error (may be expected if popup closed):', err);
-        });
+        }).catch(() => {});
       };
 
       if (apiConfig.provider === 'gemini') {
@@ -254,7 +258,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         sendResponse({ ok: false, error: result.error });
       }
     } catch (err) {
-      console.error('Error:', err);
       sendResponse({ ok: false, error: err.message });
     }
   })();
