@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "QuickAI",
-  "version": "1.2.3",
-  "description": "AI assistant with Gemini, ChatGPT, and Ollama support. Secure, fast, and fully customizable with dark/light modes.",
+  "version": "2.0.0",
+  "description": "Modern AI assistant with sleek glassmorphism UI, smooth transitions, and multi-provider support (Gemini, ChatGPT, Ollama). Fast, private, and beautiful.",
   "icons": {
     "128": "AIQUICK.png"
   },
