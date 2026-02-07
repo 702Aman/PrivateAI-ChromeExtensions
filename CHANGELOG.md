@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2026-02-07
+
+### 🎨 Major UI Redesign
+- **Two-View System** - Complete redesign with separate Main AI View and Conversation History View
+- **Glassmorphism Design** - Frosted glass panels with backdrop blur effects throughout
+- **Bottom Navigation Bar** - Mobile-style persistent navigation with History, Home, and Settings buttons
+- **Smooth Slide Transitions** - Views slide horizontally with eased cubic-bezier animations
+- **Staggered Fade-in Animations** - Content elements animate in sequentially on view switch
+
+### ✨ New Features
+- **Animated Logo Glow** - Subtle pulsing glow effect behind QuickAI logo
+- **Focus Glow Effects** - Input fields glow with blue gradient on focus
+- **Enhanced Button Design** - Gradient buttons with hover lift effect and shine overlay
+- **Redesigned History View** - Full-screen conversation list with improved delete controls
+- **Response Section Header** - Status indicator with label above response panel
+- **Keyboard Badge Styling** - Shift+Enter hint displayed as styled keyboard shortcuts
+
+### 🔧 Technical Changes
+- **Optimized Popup Size** - Changed from 360px to 380×560px for better UX
+- **CSS Variables Extended** - Added gradient, glow, and transition variables
+- **View Management System** - New JavaScript module for handling view transitions
+- **Refactored popup.js** - Cleaner code organization with view state management
+- **Custom Scrollbar Styling** - Thin, themed scrollbars matching the design
+
+### 🎯 UI Improvements
+- Deeper dark background (#0a0d12) for more contrast
+- Blue gradient accents (#4f8cff → #2563eb) on interactive elements
+- Rounded corners (14-16px) on all panels and buttons
+- Subtle border glow on focused/active states
+- History items slide right on hover for feedback
+- Conversation timestamps with dot indicator
+
 ## [1.2.2] - 2026-01-24
 
 ### Added
