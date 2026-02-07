@@ -1,40 +1,51 @@
-# Private AI Assistant
+# QuickAI - Private AI Assistant
 
-A Chromium-based browser extension that brings AI assistance directly to your browser using locally-running AI models. Get fast, private responses without sending data to external services.
+A modern, beautifully designed Chrome extension that brings AI assistance directly to your browser. Features a sleek glassmorphism UI with smooth animations and multi-provider support.
 
 ## 🎯 Purpose
 
-This extension provides quick access to local AI models via a simple popup interface. It integrates AI capabilities directly into Chrome for seamless assistance.
+QuickAI provides quick access to AI models via an elegant popup interface with a mobile-like two-view design. It integrates AI capabilities directly into Chrome for seamless assistance.
 
-**Type:** Privacy-focused AI assistant browser extension
-
-## ✨ Features
-
-- **Multiple AI Providers** - Support for Google Gemini, OpenAI ChatGPT, and Local Ollama
-- **Dark & Light Theme UI** - Professional gradient design with smooth animations and full light theme support
-- **Local AI Processing** - All queries are processed locally on your machine
-- **Private & Secure** - No data sent to external services (when using Ollama)
-- **Conversation History** - Auto-saves up to 50 recent Q&A conversations with timestamps
-- **Persistent Storage** - History saved across browser sessions
-- **Responsive Design** - Beautiful popup (360px) and full settings page
-- **Robust Error Handling** - Clear, actionable error messages for all scenarios
-- **Request Timeout** - 30-second timeout with helpful feedback
-- **Input Validation** - Prevents invalid or oversized requests (1-5000 characters)
-- **Fast Responses** - Direct communication with AI servers
-- **Smart Settings** - Provider-specific configuration with validation
-- **Zero External Dependencies** - Works offline with local Ollama
-- **Professional UX** - Gradient buttons, smooth transitions, hover effects
-- **Ollama Connection Status** - Real-time indicator showing if Ollama is running
-- **Smart Setup Guide** - Contextual help in settings page for Ollama configuration
-- **Streaming Responses** - Word-by-word streaming display for better UX
-- **Theme Persistence** - Your theme preference saved across sessions
-- **Complete Light Theme Support** - All UI elements properly styled in light mode (inputs, buttons, textarea, settings)
+**Type:** Privacy-focused AI assistant browser extension  
+**Version:** 2.0.0
 
 ## 📸 Screenshots
 
-![Popup UI](assets/popup.png)
+![Popup UI](assets/popupUI.png)
+
+![ConversationHistory UI](assets/ConversationHistory.png)
 
 ![Settings Page](assets/settings.png)
+
+## ✨ Features
+
+### 🎨 New Modern UI (v2.0)
+- **Two-View System** - Main AI view + Conversation History view with smooth slide transitions
+- **Glassmorphism Design** - Frosted glass panels with backdrop blur effects
+- **Animated Glow Effects** - Subtle pulsing glow behind logo and on focus states
+- **Bottom Navigation Bar** - Mobile-style navigation with History, Home, and Settings buttons
+- **Premium Animations** - Staggered fade-in effects, hover transforms, and smooth transitions
+- **Dark Futuristic Theme** - Deep dark background with blue gradient accents
+- **Optimized Popup Size** - 380×560px for a mobile-like panel experience
+
+### 🤖 AI Features
+- **Multiple AI Providers** - Support for Google Gemini, OpenAI ChatGPT, and Local Ollama
+- **Dark & Light Theme UI** - Professional gradient design with full light theme support
+- **Local AI Processing** - All queries are processed locally on your machine (with Ollama)
+- **Private & Secure** - No data sent to external services (when using Ollama)
+- **Conversation History** - Auto-saves up to 50 recent Q&A conversations with timestamps
+- **Persistent Storage** - History saved across browser sessions
+- **Streaming Responses** - Word-by-word streaming display for better UX
+- **Input Validation** - Prevents invalid or oversized requests (1-5000 characters)
+- **Request Timeout** - 30-second timeout with helpful feedback
+
+### ⚙️ Technical Features
+- **Robust Error Handling** - Clear, actionable error messages for all scenarios
+- **Smart Settings** - Provider-specific configuration with validation
+- **Zero External Dependencies** - Works offline with local Ollama
+- **Ollama Connection Status** - Real-time indicator showing if Ollama is running
+- **Theme Persistence** - Your theme preference saved across sessions
+- **Keyboard Shortcuts** - Enter to send, Shift+Enter for new line
 
 ## 🛠 Prerequisites
 
@@ -106,20 +117,26 @@ Before using this extension, you need **at least one** of the following:
 
 ### Using Conversation History
 
-- **View History** - Scroll through past conversations at the bottom of the popup
-- **Reload Conversation** - Click any history item to reload that question and answer
-- **Timestamps** - See when each conversation was (e.g., "5m ago", "2h ago")
-- **Delete Item** - Click the "clear" button to remove a specific conversation
-- **Clear All** - Click the "Clear" button in Conversation History header to delete entire history (with confirmation)
+- **Access History** - Click the "History" button in the bottom navigation bar
+- **Smooth Transition** - Panel slides in from the right with animation
+- **Reload Conversation** - Click any history item to reload that question and return to main view
+- **Timestamps** - See when each conversation was (e.g., "Just now", "5m ago", "2h ago")
+- **Delete Item** - Click the trash icon to remove a specific conversation
+- **Clear All** - Click the "Clear All" button in the header to delete entire history (with confirmation)
+- **Back Button** - Return to main AI view with reverse slide animation
 - **Auto-Save** - Every successful response is automatically saved (max 50 conversations)
 - **Persistent** - History is saved across browser sessions
 
-### UI Theme
+### UI Theme & Design
 
-- **Modern Dark Theme** - Professional dark interface with blue accents
-- **Gradient Design** - Beautiful gradient buttons and backgrounds
-- **Smooth Animations** - Hover effects and transitions throughout
-- **Responsive** - Optimized for both popup and full settings page
+- **Glassmorphism Panels** - Frosted glass effect with backdrop blur
+- **Modern Dark Theme** - Deep dark background (#0a0d12) with blue gradient accents
+- **Animated Logo Glow** - Subtle pulsing glow effect behind QuickAI logo
+- **Gradient Buttons** - Beautiful blue gradient (#4f8cff → #2563eb) with hover lift effect
+- **Focus Glow Effects** - Input fields glow on focus
+- **Bottom Navigation** - Persistent nav bar with active state indicators
+- **Staggered Animations** - Content fades in sequentially on view switch
+- **Responsive** - Optimized for popup (380×560px) and full settings page
 
 ## 📁 Project Structure
 
@@ -127,9 +144,9 @@ Before using this extension, you need **at least one** of the following:
 private-ai-chromeextension/
 ├── src/
 │   ├── popup/               # Popup UI and logic
-│   │   ├── popup.html       # Popup interface with modern design
-│   │   ├── popup.js         # Event handlers & AI communication
-│   │   └── style.css        # Dark theme styling
+│   │   ├── popup.html       # Two-view interface (Main + Conversations)
+│   │   ├── popup.js         # View management, transitions & AI communication
+│   │   └── style.css        # Glassmorphism styling with animations
 │   │
 │   ├── settings/            # Settings/Configuration page
 │   │   ├── settings.html    # Settings interface
@@ -140,6 +157,7 @@ private-ai-chromeextension/
 │
 ├── manifest.json            # Chrome extension manifest (MV3)
 ├── README.md               # Documentation (this file)
+├── privacy.html            # Privacy policy page
 ├── .gitignore              # Git ignore patterns
 ├── LICENSE                 # License information
 └── CHANGELOG.md            # Version history
@@ -318,21 +336,24 @@ This is a personal project. For suggestions, improvements, or bug reports, feel 
 
 See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
 
-### Latest Updates (v1.2.0+)
+### Latest Updates (v2.0.0) - Major UI Redesign
+- 🎨 **Complete UI Redesign** - Modern glassmorphism design with premium feel
+- 📱 **Two-View System** - Separate Main AI and Conversation History views
+- ✨ **Smooth Transitions** - Slide animations between views
+- 🧭 **Bottom Navigation Bar** - Mobile-style persistent navigation
+- 💫 **Animated Effects** - Logo glow, focus states, staggered fade-ins
+- 🖼️ **Glassmorphism Panels** - Frosted glass effect with backdrop blur
+- 📐 **Optimized Size** - 380×560px popup for better UX
+- 🎯 **Enhanced History View** - Full-screen conversation list with better controls
+- ⌨️ **Keyboard Shortcuts** - Enter to send, Shift+Enter for new line
+
+### Previous Updates (v1.2.0)
 - ✨ Modern dark theme UI with gradient design
-- 🎨 Professional settings page with provider-specific configuration
-- 🌞 **Complete Light Theme Support** - All UI elements fully styled for light mode
-  - Input fields, textareas, and buttons properly convert to light theme
-  - Settings page responsive to theme changes
-  - Settings button theme-aware styling
+- 🌞 Complete Light Theme Support
 - 🔄 Support for multiple AI providers (Gemini, OpenAI, Ollama)
-- ⚙️ Improved settings management and validation
-- 🎯 Better error messages and user guidance
-- 📱 Responsive design for popup and settings
-- ⏱️ Conversation history with timestamps
-- 🚀 Streaming response display for better UX
+- ⚙️ Provider-specific configuration with validation
+- 🚀 Streaming response display
 - 🔐 Enhanced security with proper input sanitization
-- 🎭 Theme preference persistence across sessions
 
 ## 🎓 Learning Resources
 
@@ -341,4 +362,5 @@ See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
 - [Google Gemini API](https://ai.google.dev/)
 - [OpenAI API Documentation](https://platform.openai.com/docs/)
 - [Ollama Documentation](https://github.com/ollama/ollama)
+
 
