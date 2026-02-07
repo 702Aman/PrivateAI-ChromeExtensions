@@ -13,12 +13,6 @@ QuickAI provides quick access to AI models via an elegant popup interface with a
 
 ![QUICKAI-Ui](assets/QuickAI-Recording.gif)
 
-![Popup UI](assets/popupUI.png)
-
-![ConversationHistory UI](assets/ConversationHistory.png)
-
-![Settings Page](assets/settings.png)
-
 ## ✨ Features
 
 ### 🎨 New Modern UI (v2.0)
