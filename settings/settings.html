@@ -1,263 +1,488 @@
-// Load saved settings
-async function loadSettings() {
-  try {
-    const result = await chromeStorageGet(['apiConfig', 'theme']);
-    const config = result.apiConfig || {
-      provider: 'gemini',
-      geminiApiKey: '',
-      openaiApiKey: '',
-      ollamaEndpoint: 'http://localhost:11434',
-      ollamaModel: 'llama3:latest'
-    };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickAI - Settings</title>
+  <style>
+    :root {
+      --bg-main: #0f1115;
+      --bg-card: #161a22;
+      --bg-soft: #1d2230;
+      --border: #2a2f3a;
+      --text-main: #e6e8ee;
+      --text-muted: #9aa1b2;
+      --blue: #3b82f6;
+      --blue-hover: #2563eb;
+      --blue-light: #4f8cff;
+    }
 
-    const theme = result.theme || 'dark';
+    body.light-theme {
+      --bg-main: #f8f9fa;
+      --bg-card: #ffffff;
+      --bg-soft: #f0f3f7;
+      --border: #e1e8ed;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --blue: #3b82f6;
+      --blue-hover: #2563eb;
+      --blue-light: #4f8cff;
+    }
 
-    // Set theme
-    applyTheme(theme);
-    updateThemeToggle(theme);
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    // Set UI values
-    document.getElementById('apiProvider').value = config.provider;
-    document.getElementById('geminiApiKey').value = config.geminiApiKey || '';
-    document.getElementById('openaiApiKey').value = config.openaiApiKey || '';
-    document.getElementById('ollamaEndpoint').value = config.ollamaEndpoint || 'http://localhost:11434';
-    document.getElementById('ollamaModel').value = config.ollamaModel || 'llama3:latest';
+    body {
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      padding: 24px;
+    }
 
-    // Show/hide relevant settings
-    updateProviderSettings(config.provider);
-  } catch (err) {
-    console.error('Error loading settings:', err);
-  }
-}
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
 
-// Chrome storage helper
-function chromeStorageGet(keys) {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(keys, resolve);
-  });
-}
+    /* Header */
+    .header {
+      margin-bottom: 20px;
+    }
 
-function chromeStorageSet(obj) {
-  return new Promise((resolve) => {
-    chrome.storage.local.set(obj, resolve);
-  });
-}
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--text-main) 0%, var(--blue) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
-// Update UI based on provider selection
-function updateProviderSettings(provider) {
-  document.getElementById('geminiSettings').classList.remove('active');
-  document.getElementById('openaiSettings').classList.remove('active');
-  document.getElementById('ollamaSettings').classList.remove('active');
-  document.getElementById('geminiInfo').classList.remove('active');
-  document.getElementById('ollamaInfo').classList.remove('active');
-  
-  if (provider === 'gemini') {
-    document.getElementById('geminiSettings').classList.add('active');
-    document.getElementById('geminiInfo').classList.add('active');
-  } else if (provider === 'openai') {
-    document.getElementById('openaiSettings').classList.add('active');
-  } else if (provider === 'ollama') {
-    document.getElementById('ollamaSettings').classList.add('active');
-    document.getElementById('ollamaInfo').classList.add('active');
-    document.getElementById('ollamaStatus').style.display = 'flex';
-    checkOllamaConnection();
-  }
-}
+    .header p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
 
-// Apply theme to the page
-function applyTheme(theme) {
-  if (theme === 'light') {
-    document.documentElement.classList.add('light-theme');
-    document.body.classList.add('light-theme');
-  } else {
-    document.documentElement.classList.remove('light-theme');
-    document.body.classList.remove('light-theme');
-  }
-}
+    /* Section */
+    .section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
 
-// Update theme toggle UI
-function updateThemeToggle(theme) {
-  const toggle = document.getElementById('themeToggle');
-  const icon = document.getElementById('themeIcon');
-  
-  if (theme === 'light') {
-    toggle.classList.add('active');
-    icon.textContent = '☀️';
-  } else {
-    toggle.classList.remove('active');
-    icon.textContent = '🌙';
-  }
-}
+    .section h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text-main);
+    }
 
-// Handle theme toggle
-async function toggleTheme() {
-  const toggle = document.getElementById('themeToggle');
-  const isLight = toggle.classList.contains('active');
-  const newTheme = isLight ? 'dark' : 'light';
-  
-  applyTheme(newTheme);
-  updateThemeToggle(newTheme);
-  
-  // Save theme preference
-  await chromeStorageSet({ theme: newTheme });
-}
+    /* Form Group */
+    .form-group {
+      margin-bottom: 20px;
+    }
 
-// Load settings on page load
-document.addEventListener('DOMContentLoaded', () => {
-  loadSettings();
-  
-  // Add event listeners for buttons
-  document.getElementById('saveBtn').addEventListener('click', saveSettings);
-  document.getElementById('backBtn').addEventListener('click', goBack);
-  document.getElementById('geminiLink').addEventListener('click', openGeminiLink);
-  document.getElementById('ollamaLink').addEventListener('click', openOllamaLink);
-  document.getElementById('websiteLink').addEventListener('click', openWebsiteLink);
-  document.getElementById('githubLink').addEventListener('click', openGithubLink);
-  
-  // Theme toggle
-  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-  
-  // Provider change handler
-  document.getElementById('apiProvider').addEventListener('change', (e) => {
-    updateProviderSettings(e.target.value);
-  });
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
 
-  // Ollama connection check on endpoint/model changes
-  document.getElementById('ollamaEndpoint').addEventListener('change', checkOllamaConnection);
-  document.getElementById('ollamaEndpoint').addEventListener('keyup', debounceCheckOllama);
-  document.getElementById('ollamaModel').addEventListener('change', checkOllamaConnection);
-});
-async function saveSettings() {
-  const provider = document.getElementById('apiProvider').value;
-  const statusEl = document.getElementById('status');
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
 
-  try {
-    // Validate API key
-    if (provider === 'gemini') {
-      const apiKey = document.getElementById('geminiApiKey').value.trim();
-      if (!apiKey) {
-        showStatus('Please enter your Gemini API key', 'error');
-        return;
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(180deg, #1b2030, #141824);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--text-main);
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    body.light-theme input[type="text"],
+    body.light-theme input[type="password"],
+    body.light-theme textarea,
+    body.light-theme select {
+      background: #f3f4f6 !important;
+      background-color: #f3f4f6 !important;
+      color: var(--text-main) !important;
+      border-color: #e1e8ed !important;
+    }
+
+    input[type="text"]::placeholder,
+    input[type="password"]::placeholder {
+      color: var(--text-muted);
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239aa1b2' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    body.light-theme select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-color: #f3f4f6;
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
+
+    .helper-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Info Box */
+    .info {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    .info strong {
+      color: var(--blue-light);
+    }
+
+    .link {
+      color: var(--blue);
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .link:hover {
+      color: var(--blue-light);
+    }
+
+    /* Status Messages */
+    .status {
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: none;
+      font-size: 14px;
+      border: 1px solid;
+    }
+
+    .status.success {
+      background: rgba(34, 197, 94, 0.1);
+      border-color: rgba(34, 197, 94, 0.3);
+      color: #86efac;
+      display: block;
+    }
+
+    .status.error {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      display: block;
+    }
+
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .save-btn {
+      background: linear-gradient(180deg, var(--blue-light), var(--blue-hover));
+      color: white;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
+    }
+
+    .save-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(59, 130, 246, 0.4);
+    }
+
+    .save-btn:active {
+      transform: translateY(0);
+    }
+
+    .back-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .back-btn:hover {
+      background: rgba(29, 34, 48, 0.5);
+      border-color: #3a4555;
+      color: var(--text-main);
+    }
+
+    /* About Section */
+    .about-content {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .about-content p {
+      margin-bottom: 10px;
+    }
+
+    .about-content p:last-child {
+      margin-bottom: 0;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .about-content strong {
+      color: var(--text-main);
+    }
+
+    /* Settings Panel Toggle */
+    .settings-panel,
+    .info-panel {
+      display: none;
+    }
+
+    .settings-panel.active,
+    .info-panel.active {
+      display: block;
+    }
+
+    /* Ollama Status Indicator */
+    .ollama-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .ollama-status.connected {
+      background: rgba(34, 197, 94, 0.1);
+      border-color: rgba(34, 197, 94, 0.3);
+      color: #86efac;
+    }
+
+    .ollama-status.disconnected {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    .ollama-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
       }
-      if (apiKey.length < 20) {
-        showStatus('API key appears too short. Please check it.', 'error');
-        return;
-      }
-    } else if (provider === 'openai') {
-      const apiKey = document.getElementById('openaiApiKey').value.trim();
-      if (!apiKey) {
-        showStatus('Please enter your OpenAI API key', 'error');
-        return;
-      }
-    } else if (provider === 'ollama') {
-      const endpoint = document.getElementById('ollamaEndpoint').value.trim();
-      const model = document.getElementById('ollamaModel').value.trim();
-      if (!endpoint || !model) {
-        showStatus('Please enter Ollama endpoint and model', 'error');
-        return;
+      50% {
+        opacity: 0.5;
       }
     }
 
-    // Save config
-    const config = {
-      provider: provider,
-      geminiApiKey: document.getElementById('geminiApiKey').value,
-      openaiApiKey: document.getElementById('openaiApiKey').value,
-      ollamaEndpoint: document.getElementById('ollamaEndpoint').value,
-      ollamaModel: document.getElementById('ollamaModel').value
-    };
-
-    await chromeStorageSet({ apiConfig: config });
-    showStatus('✅ Settings saved successfully!', 'success');
-    
-    // Go back after 1.5 seconds
-    setTimeout(() => {
-      goBack();
-    }, 1500);
-  } catch (err) {
-    console.error('Error saving settings:', err);
-    showStatus('Error saving settings: ' + err.message, 'error');
-  }
-}
-
-// Show status message
-function showStatus(message, type) {
-  const statusEl = document.getElementById('status');
-  statusEl.textContent = message;
-  statusEl.className = 'status ' + type;
-  
-  if (type === 'success') {
-    setTimeout(() => {
-      statusEl.style.display = 'none';
-    }, 3000);
-  }
-}
-
-// Open Gemini API link
-function openGeminiLink() {
-  chrome.tabs.create({ url: 'https://aistudio.google.com/app/api-keys' });
-}
-
-// Open Ollama link
-function openOllamaLink() {
-  chrome.tabs.create({ url: 'https://ollama.ai' });
-}
-
-// Open official website link
-function openWebsiteLink() {
-  chrome.tabs.create({ url: 'https://quickai-website.vercel.app/' });
-}
-
-// Open GitHub link
-function openGithubLink() {
-  chrome.tabs.create({ url: 'https://github.com/702Aman/PrivateAI-ChromeExtensions' });
-}
-
-// Debounce for checking Ollama connection during typing
-let ollamaCheckTimeout;
-function debounceCheckOllama() {
-  clearTimeout(ollamaCheckTimeout);
-  ollamaCheckTimeout = setTimeout(checkOllamaConnection, 800);
-}
-
-// Check Ollama connection status
-async function checkOllamaConnection() {
-  const endpoint = document.getElementById('ollamaEndpoint').value.trim();
-  const statusEl = document.getElementById('ollamaStatus');
-
-  if (!endpoint) {
-    statusEl.textContent = 'Enter endpoint to check';
-    statusEl.classList.remove('connected');
-    statusEl.classList.add('disconnected');
-    return;
-  }
-
-  statusEl.textContent = 'Checking connection...';
-  statusEl.classList.remove('connected', 'disconnected');
-
-  try {
-    const response = await fetch(`${endpoint}/api/tags`, {
-      method: 'GET',
-      timeout: 5000
-    });
-
-    if (response.ok) {
-      statusEl.innerHTML = '<div class="ollama-status-dot"></div><span>✅ Connected</span>';
-      statusEl.classList.remove('disconnected');
-      statusEl.classList.add('connected');
-    } else {
-      statusEl.innerHTML = '<div class="ollama-status-dot"></div><span>❌ Connection failed</span>';
-      statusEl.classList.remove('connected');
-      statusEl.classList.add('disconnected');
+    /* Theme Toggle Switch */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
     }
-  } catch (err) {
-    statusEl.innerHTML = '<div class="ollama-status-dot"></div><span>❌ Ollama not running</span>';
-    statusEl.classList.remove('connected');
-    statusEl.classList.add('disconnected');
-  }
-}
 
-// Go back to popup
-function goBack() {
-  window.close();
-}
+    .theme-toggle-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 28px;
+      background: var(--border);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      border: 1px solid var(--border);
+    }
+
+    .toggle-switch.active {
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
+    .toggle-switch-slider {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .toggle-switch.active .toggle-switch-slider {
+      transform: translateX(22px);
+    }
+
+    .toggle-icon {
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>⚙️ QuickAI Settings</h1>
+      <p>Configure your AI provider and preferences</p>
+    </div>
+
+    <!-- API Configuration Section -->
+    <div class="section">
+      <h2>API Configuration</h2>
+      <div id="status" class="status"></div>
+
+      <!-- Theme Toggle -->
+      <div class="theme-toggle">
+        <span class="theme-toggle-label">🌙 Theme</span>
+        <div class="toggle-switch" id="themeToggle">
+          <div class="toggle-switch-slider">
+            <span class="toggle-icon" id="themeIcon">🌙</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="apiProvider">AI Provider:</label>
+        <select id="apiProvider">
+          <option value="gemini">Google Gemini (Free)</option>
+          <option value="openai">OpenAI ChatGPT (Paid)</option>
+          <option value="ollama">Local Ollama (Free)</option>
+        </select>
+        <div class="helper-text">Choose where your AI requests will be sent</div>
+      </div>
+
+      <div id="geminiInfo" class="info info-panel active">
+        📌 Get a <strong>FREE</strong> Gemini API key: <span class="link" id="geminiLink">Google AI Studio</span>
+      </div>
+
+      <div id="ollamaInfo" class="info info-panel">
+        <strong>🚀 How Ollama Works:</strong><br>
+        Ollama runs locally on your machine. QuickAI connects to it at the endpoint below. Make sure Ollama is installed and running: <span class="link" id="ollamaLink">Download Ollama</span><br><br>
+        <strong>Run in terminal:</strong><br>
+        <code style="background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 4px; display: inline-block; margin-top: 4px;">OLLAMA_ORIGINS="*" ollama serve</code>
+      </div>
+
+      <!-- Gemini Settings -->
+      <div id="geminiSettings" class="settings-panel active">
+        <div class="form-group">
+          <label for="geminiApiKey">Gemini API Key:</label>
+          <input type="password" id="geminiApiKey" placeholder="Enter your Gemini API key">
+          <div class="helper-text">Your API key is stored locally and never shared</div>
+        </div>
+      </div>
+
+      <!-- OpenAI Settings -->
+      <div id="openaiSettings" class="settings-panel">
+        <div class="form-group">
+          <label for="openaiApiKey">OpenAI API Key:</label>
+          <input type="password" id="openaiApiKey" placeholder="Enter your OpenAI API key">
+          <div class="helper-text">Your API key is stored locally and never shared</div>
+        </div>
+      </div>
+
+      <!-- Ollama Settings -->
+      <div id="ollamaSettings" class="settings-panel">
+        <div id="ollamaStatus" class="ollama-status disconnected" style="display: none;">
+          <div class="ollama-status-dot"></div>
+          <span>Checking connection...</span>
+        </div>
+        <div class="form-group">
+          <label for="ollamaEndpoint">Ollama Endpoint:</label>
+          <input type="text" id="ollamaEndpoint" placeholder="http://localhost:11434">
+          <div class="helper-text">Where Ollama is running locally</div>
+        </div>
+        <div class="form-group">
+          <label for="ollamaModel">Model:</label>
+          <input type="text" id="ollamaModel" placeholder="e.g., llama3:latest">
+          <div class="helper-text">Which Ollama model to use</div>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button class="save-btn" id="saveBtn">Save Settings</button>
+        <button class="back-btn" id="backBtn">← Back</button>
+      </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="section">
+      <h2>About QuickAI</h2>
+      <div class="about-content">
+        <p><strong>Version:</strong> 1.2.0</p>
+        <p>Local AI · Fast · Private</p>
+        <p>All data is stored locally. We don't track or store your conversations.</p>
+        <p><span class="link" id="websiteLink">Official Website</span> • <span class="link" id="githubLink">View on GitHub</span></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>
