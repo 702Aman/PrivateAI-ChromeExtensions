@@ -58,6 +58,14 @@ settingsBtn.addEventListener('click', () => {
   chrome.runtime.openOptionsPage();
 });
 
+// Logo click handler
+const logoBtn = document.getElementById('logoBtn');
+if (logoBtn) {
+  logoBtn.addEventListener('click', () => {
+    chrome.tabs.create({ url: 'https://quickai-website.vercel.app/' });
+  });
+}
+
 // ========== UTILITY FUNCTIONS ==========
 function chromeStorageGet(keys) {
   return new Promise((resolve) => {
