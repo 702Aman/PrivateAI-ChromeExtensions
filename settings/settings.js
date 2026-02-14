@@ -111,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('backBtn').addEventListener('click', goBack);
   document.getElementById('geminiLink').addEventListener('click', openGeminiLink);
   document.getElementById('ollamaLink').addEventListener('click', openOllamaLink);
+  document.getElementById('websiteLink').addEventListener('click', openWebsiteLink);
   document.getElementById('githubLink').addEventListener('click', openGithubLink);
   
   // Theme toggle
@@ -200,6 +201,11 @@ function openGeminiLink() {
 // Open Ollama link
 function openOllamaLink() {
   chrome.tabs.create({ url: 'https://ollama.ai' });
+}
+
+// Open official website link
+function openWebsiteLink() {
+  chrome.tabs.create({ url: 'https://quickai-website.vercel.app/' });
 }
 
 // Open GitHub link
