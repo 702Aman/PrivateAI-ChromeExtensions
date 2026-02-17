@@ -2,6 +2,119 @@
 const REQUEST_TIMEOUT = 30000;
 const RETRY_ATTEMPTS = 1;
 
+// ========== CONTEXT MENUS ==========
+const CONTEXT_MENU_ACTIONS = [
+  { id: 'quickai-summarize', title: '📄 Summarize', prompt: 'Summarize the following text concisely:\n\n' },
+  { id: 'quickai-explain', title: '💡 Explain', prompt: 'Explain the following text in simple terms:\n\n' },
+  { id: 'quickai-rewrite', title: '✏️ Rewrite', prompt: 'Rewrite the following text to be clearer and more professional:\n\n' },
+  { id: 'quickai-translate', title: '🌐 Translate', prompt: null }, // prompt built dynamically from settings
+  { id: 'quickai-fix-grammar', title: '🔧 Fix Grammar', prompt: 'Fix grammar, spelling, and punctuation in the following text. Return only the corrected text:\n\n' },
+];
+
+// Create context menus on install/update
+chrome.runtime.onInstalled.addListener(() => {
+  // Remove existing menus first
+  chrome.contextMenus.removeAll(() => {
+    // Parent menu
+    chrome.contextMenus.create({
+      id: 'quickai-parent',
+      title: '🤖 QuickAI',
+      contexts: ['selection']
+    });
+
+    // Sub-menu items
+    CONTEXT_MENU_ACTIONS.forEach(action => {
+      chrome.contextMenus.create({
+        id: action.id,
+        parentId: 'quickai-parent',
+        title: action.title,
+        contexts: ['selection']
+      });
+    });
+  });
+});
+
+// Handle context menu clicks
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  const selectedText = info.selectionText;
+  if (!selectedText || !selectedText.trim()) return;
+
+  const action = CONTEXT_MENU_ACTIONS.find(a => a.id === info.menuItemId);
+  if (!action) return;
+
+  // Tell content script to show loading panel
+  try {
+    await chrome.tabs.sendMessage(tab.id, { type: 'context-menu-action' });
+  } catch (e) {
+    // Content script not loaded — inject it first
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['src/content/content.js']
+      });
+      await chrome.tabs.sendMessage(tab.id, { type: 'context-menu-action' });
+    } catch (err) {
+      console.error('Failed to inject content script:', err);
+      return;
+    }
+  }
+
+  // Build prompt — for translate, build dynamically from saved language setting
+  let fullPrompt;
+  if (action.id === 'quickai-translate') {
+    const config = await chromeStorageGet(['apiConfig']);
+    const targetLang = (config.apiConfig && config.apiConfig.translateLanguage) || 'English';
+    fullPrompt = `Translate the following text to ${targetLang}. If it's already in ${targetLang}, keep it as-is and mention that it's already in ${targetLang}:\n\n` + selectedText.trim();
+  } else {
+    fullPrompt = action.prompt + selectedText.trim();
+  }
+
+  // Get config and query AI
+  try {
+    const config = await chromeStorageGet(['apiConfig']);
+    const apiConfig = config.apiConfig || { provider: 'gemini' };
+
+    // Stream callback sends chunks to content script
+    const streamCallback = (chunk) => {
+      chrome.tabs.sendMessage(tab.id, {
+        type: 'context-menu-stream',
+        chunk: chunk
+      }).catch(() => {});
+    };
+
+    let result;
+
+    if (apiConfig.provider === 'gemini') {
+      if (!apiConfig.geminiApiKey) {
+        chrome.tabs.sendMessage(tab.id, { type: 'context-menu-result', error: 'Gemini API key not configured. Open QuickAI settings.' });
+        return;
+      }
+      result = await queryGemini(apiConfig.geminiApiKey, fullPrompt, streamCallback);
+    } else if (apiConfig.provider === 'openai') {
+      if (!apiConfig.openaiApiKey) {
+        chrome.tabs.sendMessage(tab.id, { type: 'context-menu-result', error: 'OpenAI API key not configured. Open QuickAI settings.' });
+        return;
+      }
+      result = await queryOpenAI(apiConfig.openaiApiKey, fullPrompt, streamCallback);
+    } else if (apiConfig.provider === 'ollama') {
+      result = await queryOllama(
+        apiConfig.ollamaEndpoint || 'http://localhost:11434',
+        apiConfig.ollamaModel || 'llama3:latest',
+        fullPrompt,
+        streamCallback
+      );
+    }
+
+    if (result.success) {
+      chrome.tabs.sendMessage(tab.id, { type: 'context-menu-result', data: result.data });
+    } else {
+      chrome.tabs.sendMessage(tab.id, { type: 'context-menu-result', error: result.error });
+    }
+  } catch (err) {
+    chrome.tabs.sendMessage(tab.id, { type: 'context-menu-result', error: err.message });
+  }
+});
+
 // Validate message format
 function validateMessage(msg) {
   if (!msg.type || msg.type !== "ask-ai") return false;
@@ -210,6 +323,16 @@ async function queryOllama(endpoint, model, prompt, streamCallback = null) {
 
 // Main message handler with streaming support
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  // Handle content script injection requests from popup
+  if (msg.type === 'inject-content-script' && msg.tabId) {
+    chrome.scripting.executeScript({
+      target: { tabId: msg.tabId },
+      files: ['src/content/content.js']
+    }).then(() => sendResponse({ ok: true }))
+      .catch(err => sendResponse({ ok: false, error: err.message }));
+    return true;
+  }
+
   if (!validateMessage(msg)) {
     sendResponse({ ok: false, error: 'Invalid message format' });
     return;
