@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.0] - 2026-02-17
+
+### ✨ New Features
+- **Clickable QuickAI Logo** — Logo now links to the official QuickAI website
+- **Official Website Link** — Added website link in settings page
+
+### 🔧 Technical Changes
+- Updated popup HTML, JS, and CSS for logo click behavior
+- Added website URL handling in settings
+
 ## [2.0.0] - 2026-02-07
 
 ### 🎨 Major UI Redesign
