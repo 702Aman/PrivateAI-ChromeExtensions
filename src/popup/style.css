@@ -243,6 +243,79 @@ body.light-theme .prompt-input {
   border: 1px solid var(--border);
 }
 
+/* ========== QUICK ACTIONS ========== */
+.quick-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  justify-content: center;
+}
+
+.action-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s var(--transition-smooth);
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-chip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-glow);
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.action-chip:hover {
+  color: var(--text-main);
+  border-color: var(--border-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.2);
+}
+
+.action-chip:hover::before {
+  opacity: 0.15;
+}
+
+.action-chip:active {
+  transform: translateY(0);
+}
+
+.action-chip.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.action-chip svg {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.action-chip span {
+  position: relative;
+  z-index: 1;
+}
+
+body.light-theme .action-chip {
+  background: rgba(255, 255, 255, 0.8);
+}
+
 /* ========== PRIMARY BUTTON ========== */
 .primary-btn {
   width: 100%;
