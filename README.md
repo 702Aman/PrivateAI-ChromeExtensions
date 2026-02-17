@@ -1,190 +1,164 @@
-# QuickAI - Private AI Assistant
+# QuickAI — Right-Click AI Assistant for Chrome
 
-A modern, beautifully designed Chrome extension that brings AI assistance directly to your browser. Features a sleek glassmorphism UI with smooth animations and multi-provider support.
+### Use AI without leaving your page. Select text → right-click → done.
 
-## 🎯 Purpose
+> **Stop tab-switching to ChatGPT.** QuickAI brings AI directly into every webpage — summarize articles, rewrite emails, translate text, fix grammar — all from a right-click. Works with Gemini, ChatGPT, or your own local AI. Private by default.
 
-QuickAI provides quick access to AI models via an elegant popup interface with a mobile-like two-view design. It integrates AI capabilities directly into Chrome for seamless assistance.
-
-**Type:** Privacy-focused AI assistant browser extension  
-**Version:** 2.0.0
+**Version:** 2.1.0 · **Manifest V3** · **Free & Open Source**
 
 ## 📸 Screenshots
 
 ![QUICKAI-Ui](assets/QuickAI-Recording.gif)
 
-## ✨ Features
+---
 
-### 🎨 New Modern UI (v2.0)
-- **Two-View System** - Main AI view + Conversation History view with smooth slide transitions
-- **Glassmorphism Design** - Frosted glass panels with backdrop blur effects
-- **Animated Glow Effects** - Subtle pulsing glow behind logo and on focus states
-- **Bottom Navigation Bar** - Mobile-style navigation with History, Home, and Settings buttons
-- **Premium Animations** - Staggered fade-in effects, hover transforms, and smooth transitions
-- **Dark Futuristic Theme** - Deep dark background with blue gradient accents
-- **Optimized Popup Size** - 380×560px for a mobile-like panel experience
+## 🔥 Why QuickAI?
 
-### 🤖 AI Features
-- **Multiple AI Providers** - Support for Google Gemini, OpenAI ChatGPT, and Local Ollama
-- **Dark & Light Theme UI** - Professional gradient design with full light theme support
-- **Local AI Processing** - All queries are processed locally on your machine (with Ollama)
-- **Private & Secure** - No data sent to external services (when using Ollama)
-- **Conversation History** - Auto-saves up to 50 recent Q&A conversations with timestamps
-- **Persistent Storage** - History saved across browser sessions
-- **Streaming Responses** - Word-by-word streaming display for better UX
-- **Input Validation** - Prevents invalid or oversized requests (1-5000 characters)
-- **Request Timeout** - 30-second timeout with helpful feedback
+| Before (without QuickAI) | After (with QuickAI) |
+|---|---|
+| Copy text from page | Select text on any page |
+| Open new tab → ChatGPT | Right-click → QuickAI |
+| Paste text, type prompt | Pick action: Summarize / Rewrite / Translate |
+| Wait, copy result | Result appears instantly on the page |
+| Switch back to original tab | **You never left.** |
 
-### ⚙️ Technical Features
-- **Robust Error Handling** - Clear, actionable error messages for all scenarios
-- **Smart Settings** - Provider-specific configuration with validation
-- **Zero External Dependencies** - Works offline with local Ollama
-- **Ollama Connection Status** - Real-time indicator showing if Ollama is running
-- **Theme Persistence** - Your theme preference saved across sessions
-- **Keyboard Shortcuts** - Enter to send, Shift+Enter for new line
+**QuickAI eliminates tab-switching.** AI lives where you work.
 
-## 🛠 Prerequisites
+---
 
-Before using this extension, you need **at least one** of the following:
+## ⚡ What You Can Do
 
-### Option 1: Google Gemini (Free & Easy)
-1. **Chromium-based Browser** (v90+) - Chrome, Edge, Brave, Opera, or Vivaldi
-2. **Google Account** - Free Gemini API key
-   - Get key: https://aistudio.google.com/app/api-keys
-   - No billing required for free tier
+### 🖱️ Right-Click AI — The Killer Feature
+Select any text on any webpage. Right-click. Pick an action. Done.
 
-### Option 2: OpenAI ChatGPT (Paid)
-1. **Chromium-based Browser** (v90+) - Chrome, Edge, Brave, Opera, or Vivaldi
-2. **OpenAI API Key**
-   - Requires billing setup in OpenAI console
-   - Pay-as-you-go pricing
+| Action | What it does |
+|---|---|
+| 📄 **Summarize** | Condense selected text into key points |
+| 💡 **Explain** | Break down complex text into simple terms |
+| ✏️ **Rewrite** | Make text clearer and more professional |
+| 🌐 **Translate** | Translate to your preferred language |
+| 🔧 **Fix Grammar** | Fix spelling, grammar, and punctuation |
 
-### Option 3: Local Ollama (Free & Private)
-1. **Chromium-based Browser** (v90+) - Chrome, Edge, Brave, Opera, or Vivaldi
-2. **Ollama** installed and running locally
-   - Download: https://ollama.ai
-   - Default endpoint: `http://localhost:11434`
-3. **At least one Ollama model** pulled (e.g., `llama3:latest`)
-   ```bash
-   ollama pull llama3:latest
-   ```
-4. **Run Ollama with CORS enabled** (required for browser access):
-   ```bash
-   OLLAMA_ORIGINS="*" ollama serve
-   ```
+Results appear in a **floating panel** right on the page — draggable, copyable, and beautiful.
 
-## 📦 Installation
+### 📄 Summarize Any Page — One Click
+Reading a long article? Click the extension → hit **Summarize Page** → get the key points in seconds. QuickAI extracts the page content automatically (filtering out ads, navigation, scripts) and sends it to your AI provider.
+
+### ✏️ Rewrite & Translate — Without Switching Tabs
+Select text on any page → click **Rewrite** or **Translate** in the popup. Your AI rewrites or translates instantly. Set your preferred translation language in Settings.
+
+### 💬 Ask Anything — AI Popup
+Open the QuickAI popup and ask any question. Responses stream word-by-word. Conversation history auto-saves so you can revisit past answers.
+
+### 🔒 Privacy-First — Your Data, Your Choice
+- **Use Local AI (Ollama)** — Everything stays on your machine. Zero data sent anywhere.
+- **Use Cloud AI (Gemini / OpenAI)** — API keys stored locally, never logged, never shared.
+- **No tracking. No telemetry. No accounts required.**
+
+---
+
+## 🎯 Real Use Cases
+
+| Scenario | How QuickAI Helps |
+|---|---|
+| Long article or report | **Summarize page** in one click |
+| Writing an email | Select draft → **Rewrite** to make it professional |
+| Reading foreign language content | Select text → **Translate** without switching tabs |
+| Reviewing code comments | **Explain** complex text in simple terms |
+| Polishing a document | **Fix Grammar** on selected paragraphs |
+| Quick knowledge lookup | Open popup → **Ask AI** anything |
+| Research workflow | Save & revisit past questions in **Conversation History** |
+
+---
+
+## ✨ Features at a Glance
+
+### AI & Workflow
+- **5 Right-Click AI Actions** — Summarize, Explain, Rewrite, Translate, Fix Grammar
+- **Floating Result Panel** — Draggable, resizable, copyable results on any page
+- **Quick Action Chips** — Summarize Page, Rewrite Selection, Translate Selection
+- **Smart Page Extraction** — Auto-extracts text, filters ads/scripts/nav (up to 8000 chars)
+- **Streaming Responses** — Word-by-word display for fast feedback
+- **Conversation History** — Auto-saves 50 recent Q&A with timestamps
+- **Configurable Translation** — Set your preferred target language
+
+### AI Providers
+- **Google Gemini** (Free) — Uses latest `gemini-2.0-flash` model
+- **OpenAI ChatGPT** (Paid) — GPT-3.5 Turbo
+- **Local Ollama** (Free & 100% Private) — Run any model on your machine
+
+### Design
+- **Glassmorphism UI** — Frosted glass panels, animated glow effects
+- **Dark & Light Themes** — Switch in settings, persists across sessions
+- **Bottom Navigation** — Mobile-style nav bar with History, Home, Settings
+- **Smooth Animations** — Slide transitions, staggered fade-ins, hover effects
+- **Compact Popup** — 380×560px, optimized for quick access
+
+### Under the Hood
+- **Manifest V3** — Latest Chrome extension standard
+- **Auto Content Script Injection** — Seamlessly injects when needed
+- **Robust Error Handling** — Actionable error messages for every scenario
+- **Keyboard Shortcuts** — Enter to send, Shift+Enter for new line
+- **Zero External Dependencies** — Works offline with Ollama
+- **Ollama Connection Status** — Real-time connection indicator in settings
+
+---
+
+## 🛠 Getting Started
+
+### 1. Install the Extension
 
 1. Clone or download this repository
-2. Open your browser and go to `chrome://extensions/` (or equivalent in your browser)
-3. Enable **Developer mode** (toggle in top right)
-4. Click **Load unpacked**
-5. Select this folder (`private-ai-chromeextension`)
-6. The extension icon will appear in your browser toolbar
+2. Go to `chrome://extensions/` in your browser
+3. Enable **Developer mode** (top right toggle)
+4. Click **Load unpacked** → select this folder
+5. QuickAI icon appears in your toolbar — you're ready!
 
-## 🚀 Usage
+### 2. Choose Your AI Provider
 
-### Initial Setup
+Click the QuickAI icon → **Settings** → pick one:
 
-1. **Configure Your AI Provider**
-   - Click the extension icon → ⚙️ Settings
-   - Choose your provider (Gemini, OpenAI, or Ollama)
-   - For Gemini/OpenAI: Enter your API key
-   - For Ollama: Enter endpoint and model name
-   - Click **Save Settings**
+| Provider | Cost | Privacy | Setup |
+|---|---|---|---|
+| **Google Gemini** | Free tier | Cloud | Paste API key from [Google AI Studio](https://aistudio.google.com/app/api-keys) |
+| **OpenAI ChatGPT** | Pay-as-you-go | Cloud | Paste API key from [OpenAI](https://platform.openai.com/api-keys) |
+| **Local Ollama** | Free | 100% Local | Install [Ollama](https://ollama.ai), run `OLLAMA_ORIGINS="*" ollama serve` |
 
-2. **Start Your AI Service** (if using Ollama)
-   ```bash
-   OLLAMA_ORIGINS="*" ollama serve
-   ```
-   This enables CORS so the browser extension can communicate with Ollama.
+### 3. Start Using AI
 
-### Asking Questions
+**Right-Click AI (fastest way):**
+1. Select any text on a webpage
+2. Right-click → **🤖 QuickAI** → pick an action
+3. Result appears on the page. Done.
 
-1. **Click the QuickAI extension icon** in your browser toolbar
-2. **Type your question** in the text area (1-5000 characters)
-3. **Press Enter or Click "Ask AI"** button
-4. **Wait for the response** to appear in the response panel
+**Quick Actions (from popup):**
+1. Click the QuickAI icon in your toolbar
+2. Hit **Summarize Page**, **Rewrite**, or **Translate**
+3. AI processes the page content or your selection instantly
 
-### Tips
-- Use clear, specific questions for better responses
-- Try: "Summarize this page", "Explain quantum computing", etc.
-- Shift + Enter to add a new line in the textarea
+**Ask Anything (from popup):**
+1. Click the QuickAI icon → type a question → press Enter
+2. Response streams word-by-word in real time
 
-### Using Conversation History
+---
 
-- **Access History** - Click the "History" button in the bottom navigation bar
-- **Smooth Transition** - Panel slides in from the right with animation
-- **Reload Conversation** - Click any history item to reload that question and return to main view
-- **Timestamps** - See when each conversation was (e.g., "Just now", "5m ago", "2h ago")
-- **Delete Item** - Click the trash icon to remove a specific conversation
-- **Clear All** - Click the "Clear All" button in the header to delete entire history (with confirmation)
-- **Back Button** - Return to main AI view with reverse slide animation
-- **Auto-Save** - Every successful response is automatically saved (max 50 conversations)
-- **Persistent** - History is saved across browser sessions
+## 🔧 Ollama Setup (For Local/Private AI)
 
-### UI Theme & Design
-
-- **Glassmorphism Panels** - Frosted glass effect with backdrop blur
-- **Modern Dark Theme** - Deep dark background (#0a0d12) with blue gradient accents
-- **Animated Logo Glow** - Subtle pulsing glow effect behind QuickAI logo
-- **Gradient Buttons** - Beautiful blue gradient (#4f8cff → #2563eb) with hover lift effect
-- **Focus Glow Effects** - Input fields glow on focus
-- **Bottom Navigation** - Persistent nav bar with active state indicators
-- **Staggered Animations** - Content fades in sequentially on view switch
-- **Responsive** - Optimized for popup (380×560px) and full settings page
-
-## 📁 Project Structure
-
-```
-private-ai-chromeextension/
-├── src/
-│   ├── popup/               # Popup UI and logic
-│   │   ├── popup.html       # Two-view interface (Main + Conversations)
-│   │   ├── popup.js         # View management, transitions & AI communication
-│   │   └── style.css        # Glassmorphism styling with animations
-│   │
-│   ├── settings/            # Settings/Configuration page
-│   │   ├── settings.html    # Settings interface
-│   │   └── settings.js      # Settings management & validation
-│   │
-│   └── background/          # Background service worker
-│       └── background.js    # Multi-provider AI API communication
-│
-├── manifest.json            # Chrome extension manifest (MV3)
-├── README.md               # Documentation (this file)
-├── privacy.html            # Privacy policy page
-├── .gitignore              # Git ignore patterns
-├── LICENSE                 # License information
-└── CHANGELOG.md            # Version history
-```
-
-## 🔧 Configuration
-
-### Via Settings Page (Recommended)
-
-1. Click the extension icon → ⚙️ Settings
-2. Select your AI provider:
-   - **Google Gemini**: Paste your API key from https://aistudio.google.com/app/api-keys
-   - **OpenAI**: Paste your API key from https://platform.openai.com/api-keys
-   - **Local Ollama**: Enter endpoint and model name
-3. Click **Save Settings**
-
-### Ollama Configuration
-
-**List available models:**
 ```bash
-ollama list
-```
+# 1. Install Ollama from https://ollama.ai
 
-**Pull a new model:**
-```bash
+# 2. Pull a model
 ollama pull llama3:latest
+
+# 3. Start with CORS enabled (required for browser extensions)
+OLLAMA_ORIGINS="*" ollama serve
 ```
 
-**Change default endpoint** (if Ollama runs on different port):
-- In Settings page, change "Ollama Endpoint" to your server address
-- Default: `http://localhost:11434`
+Then in QuickAI Settings: set provider to **Ollama**, endpoint `http://localhost:11434`, model `llama3:latest`.
+
+**List available models:** `ollama list`
+
+---
 
 ## 🐛 Troubleshooting
 
@@ -256,106 +230,99 @@ ollama pull llama3:latest
 - Check the green ✅ success message
 - Verify API key format for your provider
 
+---
+
+## 🧑‍💻 Who Is QuickAI For?
+
+| Audience | Why they love QuickAI |
+|---|---|
+| **Developers** | Explain code, fix errors, rewrite docs — right-click on any page |
+| **Writers & Marketers** | Rewrite copy, fix grammar, translate — without leaving the page |
+| **Researchers** | Summarize long articles & papers in one click |
+| **Students** | Explain complex topics, translate foreign sources |
+| **Privacy-conscious users** | Run AI 100% locally with Ollama — zero data leaves your machine |
+| **AI power users** | Bring your own Gemini/OpenAI/Ollama key, use any model |
+
+---
+
+## 📁 Project Structure
+
+```
+private-ai-chromeextension/
+├── src/
+│   ├── popup/               # Extension popup UI
+│   │   ├── popup.html       # Two-view interface (Main + History)
+│   │   ├── popup.js         # Quick actions, streaming, history
+│   │   └── style.css        # Glassmorphism styling & animations
+│   ├── content/             # Injected into webpages
+│   │   └── content.js       # Page extraction, selection, floating panel
+│   ├── settings/            # Full-page settings
+│   │   ├── settings.html    # Provider config, translation language
+│   │   └── settings.js      # Settings logic & Ollama status check
+│   └── background/          # Service worker
+│       └── background.js    # Context menus, API calls, streaming
+├── manifest.json            # Manifest V3 config
+├── privacy.html             # Privacy policy
+├── CHANGELOG.md             # Version history
+└── LICENSE                  # MIT License
+```
+
 ## 📝 Development
 
-### Debugging
+```bash
+# Debug background worker
+chrome://extensions/ → Click extension → "service worker"
 
-1. Open the extension details page: `chrome://extensions/`
-2. Click on your extension
-3. Click **"service worker"** to see background logs
-4. Click the extension popup and press **F12** for popup logs
+# Debug popup
+Click popup → press F12
 
-### Making Changes
+# After editing source files
+chrome://extensions/ → Click refresh icon on QuickAI
+```
 
-1. Edit files in `src/popup/` or `src/background/`
-2. Go to `chrome://extensions/`
-3. Click the refresh icon on your extension
-4. Test the changes
+## ⚠️ Good to Know
 
-### Common Development Tasks
-
-- **Change popup styling**: Edit `src/popup/style.css`
-- **Update UI elements**: Edit `src/popup/popup.html`
-- **Modify behavior**: Edit `src/popup/popup.js` or `src/background/background.js`
-
-## 📋 Manifest Overview
-
-This extension uses **Manifest V3** (MV3), the latest web extension standard supported by all Chromium browsers:
-
-- **Permissions**: `storage` - for data persistence
-- **Host Permissions**: `http://localhost:11434/*` - to access local AI server
-- **Background Worker**: Service worker for API calls
-- **UI**: Single popup window
-
-## ⚠️ Limitations & Notes
-
-- **Provider Required** - You must configure at least one AI provider (Gemini, OpenAI, or Ollama)
-- **No Streaming** - Responses are complete, not streamed character-by-character
-- **30-Second Timeout** - Requests exceeding 30 seconds will timeout
-- **5000 Character Limit** - Input questions limited to 5000 characters
-- **50 History Limit** - Conversation history stores maximum 50 items
-- **Response Latency** - Depends on model size and system hardware
-- **Single Provider** - One provider configured at a time (can switch in settings)
-- **Local Ollama Only** - Ollama connection limited to localhost (for security)
-- **API Key Security** - Keys stored locally in browser, never logged or transmitted
-- **No Cross-Device Sync** - History and settings per Chrome profile only
+- Requires at least one AI provider configured (Gemini is free)
+- Context menu actions require text to be selected first
+- Doesn't work on `chrome://` internal pages (browser restriction)
+- API keys stored locally, never transmitted beyond the provider API
+- History & settings are per-browser-profile, not synced across devices
+- 30s request timeout · 5000 char input limit · 8000 char page extraction limit
 
 ## 🔒 Privacy & Security
 
-**With Local Ollama:**
-- All communication happens locally between your browser and AI server
-- No data leaves your computer
-- No requests to external services
-- Fully private and offline-capable
+**Your data stays yours.** QuickAI has no backend servers, no accounts, no tracking.
 
-**With Gemini/OpenAI:**
-- API keys stored locally in Chrome extension storage
-- Keys never logged or exposed in console
-- Communication encrypted (HTTPS only)
-- Your queries sent to provider's API servers
-- Review provider's privacy policies for data handling
-
-**General:**
-- Conversation history stored locally in browser storage
-- No tracking or telemetry
-- All data stays on your device
+- **Local Ollama** → Everything on your machine. Zero external requests. Fully offline.
+- **Gemini / OpenAI** → API keys stored locally. HTTPS only. Keys never logged or shared.
+- **No telemetry.** No analytics. No data collection. Period.
 
 ## 📄 License
 
-This project is licensed under the **MIT License**.
+MIT License — free to use, modify, and distribute.
 
 ## 🤝 Contributing
 
-This is a personal project. For suggestions, improvements, or bug reports, feel free to open GitHub Issues.
+Suggestions, bug reports, and PRs welcome! Open a [GitHub Issue](https://github.com/702Aman/PrivateAI-ChromeExtensions/issues).
 
 ## 📚 Version History
 
-See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
+See [CHANGELOG.md](CHANGELOG.md) for full details.
 
-### Latest Updates (v2.0.0) - Major UI Redesign
-- 🎨 **Complete UI Redesign** - Modern glassmorphism design with premium feel
-- 📱 **Two-View System** - Separate Main AI and Conversation History views
-- ✨ **Smooth Transitions** - Slide animations between views
-- 🧭 **Bottom Navigation Bar** - Mobile-style persistent navigation
-- 💫 **Animated Effects** - Logo glow, focus states, staggered fade-ins
-- 🖼️ **Glassmorphism Panels** - Frosted glass effect with backdrop blur
-- 📐 **Optimized Size** - 380×560px popup for better UX
-- 🎯 **Enhanced History View** - Full-screen conversation list with better controls
-- ⌨️ **Keyboard Shortcuts** - Enter to send, Shift+Enter for new line
+| Version | Highlights |
+|---|---|
+| **v2.1.0** | Right-click context menu, floating panel, quick actions, page summarization, Gemini 2.0 Flash |
+| **v2.0.0** | Complete UI redesign, glassmorphism, two-view system, bottom nav, animations |
+| **v1.2.0** | Multi-provider support (Gemini + OpenAI + Ollama), light theme, streaming |
+| **v1.1.0** | Conversation history, dark mode, error handling, input validation |
+| **v1.0.0** | Initial release — basic Ollama AI popup |
 
-### Previous Updates (v1.2.0)
-- ✨ Modern dark theme UI with gradient design
-- 🌞 Complete Light Theme Support
-- 🔄 Support for multiple AI providers (Gemini, OpenAI, Ollama)
-- ⚙️ Provider-specific configuration with validation
-- 🚀 Streaming response display
-- 🔐 Enhanced security with proper input sanitization
+---
 
-## 🎓 Learning Resources
+<div align="center">
 
-- [Chrome Extension Documentation](https://developer.chrome.com/docs/extensions/)
-- [Manifest V3 Guide](https://developer.chrome.com/docs/extensions/mv3/)
-- [Google Gemini API](https://ai.google.dev/)
-- [OpenAI API Documentation](https://platform.openai.com/docs/)
-- [Ollama Documentation](https://github.com/ollama/ollama)
+**QuickAI** — AI without breaking your flow.
 
+[Report Bug](https://github.com/702Aman/PrivateAI-ChromeExtensions/issues) · [Request Feature](https://github.com/702Aman/PrivateAI-ChromeExtensions/issues) · [View on GitHub](https://github.com/702Aman/PrivateAI-ChromeExtensions)
+
+</div>
