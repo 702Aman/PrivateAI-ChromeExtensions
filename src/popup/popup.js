@@ -317,6 +317,151 @@ document.getElementById('input').addEventListener('keydown', (e) => {
   }
 });
 
+// ========== QUICK ACTIONS ==========
+
+// Helper: get active tab
+async function getActiveTab() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  return tab;
+}
+
+// Helper: inject content script if needed and send message
+async function sendToContentScript(tabId, message) {
+  try {
+    return await chrome.tabs.sendMessage(tabId, message);
+  } catch (e) {
+    // Content script not loaded — ask background to inject it
+    await chrome.runtime.sendMessage({ type: 'inject-content-script', tabId: tabId });
+    // Small delay to let the script initialize
+    await new Promise(resolve => setTimeout(resolve, 100));
+    return await chrome.tabs.sendMessage(tabId, message);
+  }
+}
+
+// Helper: run a quick action that sends a prompt to AI
+async function runQuickAction(actionName, getPromptFn) {
+  const responseDiv = document.getElementById('response');
+  const askBtn = document.getElementById('askBtn');
+  const indicator = document.querySelector('.response-indicator');
+  const actionBtn = document.getElementById(actionName);
+
+  // Set loading state on chip
+  if (actionBtn) actionBtn.classList.add('loading');
+  askBtn.disabled = true;
+  responseDiv.innerHTML = '';
+  responseDiv.classList.remove('error');
+  responseDiv.classList.add('loading', 'streaming');
+  if (indicator) indicator.style.animation = 'pulse 1s ease-in-out infinite';
+
+  let fullResponse = '';
+
+  const messageListener = (request) => {
+    if (request.type === 'stream-chunk') {
+      fullResponse += request.chunk;
+      responseDiv.innerHTML = escapeHtml(fullResponse);
+      responseDiv.scrollTop = responseDiv.scrollHeight;
+    }
+  };
+  chrome.runtime.onMessage.addListener(messageListener);
+
+  try {
+    const prompt = await getPromptFn();
+    if (!prompt) {
+      throw new Error('No content available. Make sure you\'re on a webpage.');
+    }
+
+    const response = await sendMessageWithTimeout({
+      type: 'ask-ai',
+      prompt: prompt.trim(),
+      stream: true
+    });
+
+    if (!response) throw new Error('No response from background worker');
+
+    if (response.ok && response.data) {
+      fullResponse = response.data;
+      responseDiv.innerHTML = escapeHtml(response.data);
+      responseDiv.classList.remove('error', 'loading', 'streaming');
+      // Save with a descriptive question
+      const shortPrompt = prompt.substring(0, 80) + (prompt.length > 80 ? '...' : '');
+      await saveToHistory(shortPrompt, response.data);
+    } else {
+      throw new Error(response.error || 'Unknown error occurred');
+    }
+  } catch (err) {
+    responseDiv.innerHTML = `<span style="color: #ff6b6b;">❌ ${escapeHtml(err.message)}</span>`;
+    responseDiv.classList.add('error');
+    responseDiv.classList.remove('loading', 'streaming');
+  } finally {
+    chrome.runtime.onMessage.removeListener(messageListener);
+    askBtn.disabled = false;
+    if (actionBtn) actionBtn.classList.remove('loading');
+    if (indicator) indicator.style.animation = '';
+  }
+}
+
+// Summarize Page button
+document.getElementById('summarizePageBtn').addEventListener('click', () => {
+  runQuickAction('summarizePageBtn', async () => {
+    const tab = await getActiveTab();
+    if (!tab || !tab.id) throw new Error('Cannot access the current tab.');
+
+    // Check for restricted pages
+    if (tab.url && (tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://') || tab.url.startsWith('about:'))) {
+      throw new Error('Cannot access content on this page (browser internal page).');
+    }
+
+    const result = await sendToContentScript(tab.id, { type: 'get-page-text' });
+    if (!result || !result.text || result.text.trim().length < 20) {
+      throw new Error('Not enough text content found on this page.');
+    }
+
+    return `Summarize the following webpage concisely. Title: "${result.title}"\n\n${result.text}`;
+  });
+});
+
+// Rewrite Selection button
+document.getElementById('rewriteSelectionBtn').addEventListener('click', () => {
+  runQuickAction('rewriteSelectionBtn', async () => {
+    const tab = await getActiveTab();
+    if (!tab || !tab.id) throw new Error('Cannot access the current tab.');
+
+    if (tab.url && (tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://') || tab.url.startsWith('about:'))) {
+      throw new Error('Cannot access content on this page (browser internal page).');
+    }
+
+    const result = await sendToContentScript(tab.id, { type: 'get-selection' });
+    if (!result || !result.text || result.text.trim().length === 0) {
+      throw new Error('No text selected. Please select some text on the page first.');
+    }
+
+    return `Rewrite the following text to be clearer and more professional:\n\n${result.text}`;
+  });
+});
+
+// Translate Selection button
+document.getElementById('translateSelectionBtn').addEventListener('click', () => {
+  runQuickAction('translateSelectionBtn', async () => {
+    const tab = await getActiveTab();
+    if (!tab || !tab.id) throw new Error('Cannot access the current tab.');
+
+    if (tab.url && (tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://') || tab.url.startsWith('about:'))) {
+      throw new Error('Cannot access content on this page (browser internal page).');
+    }
+
+    const result = await sendToContentScript(tab.id, { type: 'get-selection' });
+    if (!result || !result.text || result.text.trim().length === 0) {
+      throw new Error('No text selected. Please select some text on the page first.');
+    }
+
+    // Get user's preferred translation language from settings
+    const config = await chromeStorageGet(['apiConfig']);
+    const targetLang = (config.apiConfig && config.apiConfig.translateLanguage) || 'English';
+
+    return `Translate the following text to ${targetLang}. If it's already in ${targetLang}, keep it as-is and mention that it's already in ${targetLang}:\n\n${result.text}`;
+  });
+});
+
 // ========== INITIALIZATION ==========
 document.addEventListener('DOMContentLoaded', () => {
   applyTheme();
