@@ -22,6 +22,7 @@ async function loadSettings() {
     document.getElementById('openaiApiKey').value = config.openaiApiKey || '';
     document.getElementById('ollamaEndpoint').value = config.ollamaEndpoint || 'http://localhost:11434';
     document.getElementById('ollamaModel').value = config.ollamaModel || 'llama3:latest';
+    document.getElementById('translateLanguage').value = config.translateLanguage || 'English';
 
     // Show/hide relevant settings
     updateProviderSettings(config.provider);
@@ -164,7 +165,8 @@ async function saveSettings() {
       geminiApiKey: document.getElementById('geminiApiKey').value,
       openaiApiKey: document.getElementById('openaiApiKey').value,
       ollamaEndpoint: document.getElementById('ollamaEndpoint').value,
-      ollamaModel: document.getElementById('ollamaModel').value
+      ollamaModel: document.getElementById('ollamaModel').value,
+      translateLanguage: document.getElementById('translateLanguage').value
     };
 
     await chromeStorageSet({ apiConfig: config });
